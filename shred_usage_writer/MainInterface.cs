@@ -26,13 +26,13 @@ namespace shred_usage_writer
         internal System.Windows.Forms.NumericUpDown Temp;
         internal System.Windows.Forms.Button SubmitButton;
         internal System.Windows.Forms.CheckBox BinSealGrade;
-        internal System.Windows.Forms.RadioButton Firmness;
-        internal System.Windows.Forms.RadioButton Delvicid;
+        internal System.Windows.Forms.GroupBox FirmnessBox;
+        internal System.Windows.Forms.RadioButton FirmnessFirm;
+        internal System.Windows.Forms.RadioButton FirmnessSoft;
+        internal System.Windows.Forms.GroupBox DelvicidBox;
+        internal System.Windows.Forms.RadioButton DelvicidTrue;
+        internal System.Windows.Forms.RadioButton DelvicidFalse;
         internal System.Windows.Forms.TextBox Initials;
-        //Bin Seal Grade
-        //Firmness (F or S)
-        //Delvicid Y or N
-        //Initials
 
 
         // Initialize ComboBox1.
@@ -200,17 +200,33 @@ namespace shred_usage_writer
             this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
             this.Controls.Add(this.BinSealGrade);
 
-            this.Firmness = new RadioButton();
-            this.Firmness.Name = "Firmness";
-            this.Firmness.Location = new System.Drawing.Point(450, 198);
-            this.Firmness.Size = new System.Drawing.Size(80, 30);
-            this.Controls.Add(this.Firmness);
+            this.FirmnessBox = new GroupBox();
+            this.FirmnessBox.Name = "Firmness Box";
+            this.FirmnessBox.Location = new System.Drawing.Point(420, 178);
+            this.FirmnessBox.Size = new System.Drawing.Size(120, 70);
+            this.FirmnessBox.FlatStyle = FlatStyle.Standard;
+            this.FirmnessFirm = new RadioButton();
+            this.FirmnessFirm.Name = "Firmness Firm";
+            this.FirmnessFirm.Location = new System.Drawing.Point(30, 30);
+            this.FirmnessFirm.Size = new System.Drawing.Size(30, 30);
+            this.FirmnessBox.Controls.Add(this.FirmnessFirm);
+            this.FirmnessSoft = new RadioButton();
+            this.FirmnessSoft.Name = "Firmness Soft";
+            this.FirmnessSoft.Location = new System.Drawing.Point(90, 30);
+            this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
+            this.FirmnessBox.Controls.Add(this.FirmnessSoft);
+            this.Controls.Add(this.FirmnessBox);
 
-            this.Delvicid = new RadioButton();
-            this.Delvicid.Name = "Delvicid";
-            this.Delvicid.Location = new System.Drawing.Point(450, 278);
-            this.Delvicid.Size = new System.Drawing.Size(80, 30);
-            this.Controls.Add(this.Delvicid);
+            this.DelvicidTrue = new RadioButton();
+            this.DelvicidTrue.Name = "Delvicid True";
+            this.DelvicidTrue.Location = new System.Drawing.Point(450, 278);
+            this.DelvicidTrue.Size = new System.Drawing.Size(30, 30);
+            this.Controls.Add(this.DelvicidTrue);
+            this.DelvicidFalse = new RadioButton();
+            this.DelvicidFalse.Name = "Delvicid False";
+            this.DelvicidFalse.Location = new System.Drawing.Point(520, 278);
+            this.DelvicidFalse.Size = new System.Drawing.Size(30, 30);
+            this.Controls.Add(this.DelvicidFalse);
         }
     }
 }
