@@ -5,6 +5,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\pbsmi\\workspace\\excel-sharp\\shred_usage_writer\\maininterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\pbsmi\\workspace\\excel-sharp\\shred_usage_writer\\maininterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\pbsmi\\workspace\\excel-sharp\\shred_usage_writer\\maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +22,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainInterface.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.Designer.cs",
+              "RelativeDocumentMoniker": "MainInterface.Designer.cs",
+              "ToolTip": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.Designer.cs",
+              "RelativeToolTip": "MainInterface.Designer.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-02T23:50:46.33Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainInterface.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.cs",
+              "RelativeDocumentMoniker": "MainInterface.cs",
+              "ToolTip": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.cs [Design]",
+              "RelativeToolTip": "MainInterface.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-02T23:01:07.916Z",
+              "EditorCaption": " [Design]"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +57,7 @@
               "RelativeDocumentMoniker": "MainInterface.cs",
               "ToolTip": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.cs",
               "RelativeToolTip": "MainInterface.cs",
-              "ViewState": "AQIAAMQAAAAAAAAAAAAUwM0AAAA+AAAA",
+              "ViewState": "AQIAAD4BAAAAAAAAAAAAAFYBAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-01T22:20:14.915Z",
               "EditorCaption": ""
