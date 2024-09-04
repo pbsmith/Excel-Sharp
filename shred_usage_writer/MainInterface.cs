@@ -2,6 +2,7 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Diagnostics;
 
 namespace shred_usage_writer
 {
@@ -17,7 +18,8 @@ namespace shred_usage_writer
             this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\test_shred_usage.xlsx");
         }
 
-        // Declare Components
+
+        // Declare Controls
         internal System.Windows.Forms.ComboBox ComboBox1;
         internal System.Windows.Forms.DateTimePicker Date;
         internal System.Windows.Forms.NumericUpDown ToteSkidNumber;
@@ -34,6 +36,7 @@ namespace shred_usage_writer
         internal System.Windows.Forms.RadioButton DelvicidTrue;
         internal System.Windows.Forms.RadioButton DelvicidFalse;
         internal System.Windows.Forms.TextBox Initials;
+
 
         //  Declare Labels
         internal System.Windows.Forms.Label dateLabel;
@@ -292,7 +295,7 @@ namespace shred_usage_writer
             this.SubmitButton.Text = "SUBMIT";
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click += 
-                delegate (object sender, EventArgs e) { SubmitButton_Clicked(sender, e, productNumber); };
+                delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeA(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
             binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
@@ -392,12 +395,88 @@ namespace shred_usage_writer
         {
 
         }
+        public static string ColumnNumberToName(int columnNumber)
+        {
+            string columnName = String.Empty;
+            while (columnNumber > 0)
+            {
+                int modulo = (columnNumber - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                columnNumber = (columnNumber - modulo) / 26;
+            }
+            return columnName;
+        }
 
-        private void SubmitButton_Clicked(object sender, EventArgs e, string productNumber)
+        private void SubmitButton_ClickedTypeA(object sender, EventArgs e, string productNumber)
         {
             this.ws = wb.Worksheet(productNumber);
 
-            this.ws.Worksheet.Cell("A67").Value = "Hello World";
+            bool flag = false;
+            int columnNumber = 3;
+
+            //Check for Date
+            //
+            while(flag == false)
+            {
+                if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber)+"2").IsEmpty())
+                {
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber)+"2").Value = this.Date.Value.Date;
+                    flag = true;
+                }
+                else if(ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "2").Value.GetDateTime().Date == this.Date.Value.Date)
+                {
+                    flag = true;
+                }
+                else
+                {
+                    columnNumber += 10;
+                }
+            }
+
+            columnNumber -= 1;
+            int rowNumber = 4;
+            flag = false;
+            while (flag == false)
+            {
+                if(ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).IsEmpty())
+                {
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.ToteSkidNumber.Value;
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.NumberPieces.Value;
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.BinWeight.Value;
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.StartTime.Value;
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.Temp.Value;
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = "GOOD";
+                    columnNumber += 1;
+                    if(this.FirmnessFirm.Checked)
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = "F";
+                    }
+                    else
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = "S";
+                    }
+                    columnNumber += 1;
+                    if(this.DelvicidTrue.Checked)
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = "YES";
+                    }
+                    else
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = "NO";
+                    }
+                    columnNumber += 1;
+                    flag = true;
+                }
+                else
+                {
+                    rowNumber += 1;
+                }
+            }
 
             this.wb.Save();
         }
