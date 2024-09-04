@@ -14,7 +14,7 @@ namespace shred_usage_writer
             InitializeComponent();
             this.Text = "Miceli Dairy Products - Block Usage Reporting Tool";
             InitializeComboBox();
-            this.wb = new XLWorkbook(@"C:\Users\pbsmi\workspace\Excel-Sharp\test_shred_usage.xlsx");
+            this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\test_shred_usage.xlsx");
         }
 
         // Declare Components
@@ -34,6 +34,17 @@ namespace shred_usage_writer
         internal System.Windows.Forms.RadioButton DelvicidTrue;
         internal System.Windows.Forms.RadioButton DelvicidFalse;
         internal System.Windows.Forms.TextBox Initials;
+
+        //  Declare Labels
+        internal System.Windows.Forms.Label dateLabel;
+        internal System.Windows.Forms.Label skidNumberLabel;
+        internal System.Windows.Forms.Label piecesNumberLabel;
+        internal System.Windows.Forms.Label binWeightLabel;
+        internal System.Windows.Forms.Label startTimeLabel;
+        internal System.Windows.Forms.Label tempLabel;
+        internal System.Windows.Forms.Label binSealLabel;
+        internal System.Windows.Forms.Label firmnessLabel;
+        internal System.Windows.Forms.Label delvicidLabel;
 
 
         // Initialize ComboBox1.
@@ -64,46 +75,54 @@ namespace shred_usage_writer
             switch (selectedProduct)
             {
                 case "001-000133":
-                    this.ws = wb.Worksheet("1-133");
-                    this.ws.Worksheet.Cell("A67").Value = "Hello World";
-                    this.wb.Save();
+                    NewSelection();
+                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000133      ";
+                    InitializeBlockTypeA("1-133");
                     break;
                 case "001-000169":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000169      Part-Skim Block";
-                    InitializeBlockTypeA();
+                    InitializeBlockTypeA("1-169");
                     break;
                 case "001-000195":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000195      ";
+                    InitializeBlockTypeA("1-195");
                     break;
                 case "001-000229":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000229      ";
+                    InitializeBlockTypeA("1-229");
                     break;
                 case "001-000360":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000360      ";
+                    InitializeBlockTypeA("1-360");
                     break;
                 case "001-000455":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000455      ";
+                    InitializeBlockTypeA("1-455");
                     break;
                 case "001-000470":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000470      ";
+                    InitializeBlockTypeA("1-470");
                     break;
                 case "001-000508":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000508      ";
+                    InitializeBlockTypeA("1-508");
                     break;
                 case "001-000525":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000525      Whole Milk Block";
+                    InitializeBlockTypeA("1-525");
                     break;
                 case "001-000528":
                     NewSelection();
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                 001-000528      ";
+                    InitializeBlockTypeA("1-528");
                     break;
                 case "008-000005 PS Purchased":
                     NewSelection();
@@ -154,23 +173,30 @@ namespace shred_usage_writer
 
         private void NewSelection()
         {
-            foreach (System.Windows.Forms.Control item in this.Controls)
-            {
-                if (item != ComboBox1)
-                {
-                    this.Controls.Remove(item);
-                }
-            }
-
-            //Removing Numeric UpDowns
             this.Controls.Remove(ToteSkidNumber);
             this.Controls.Remove(BinWeight);
             this.Controls.Remove(Temp);
+            this.Controls.Remove(DelvicidBox);
+            this.Controls.Remove(FirmnessBox);
+            this.Controls.Remove(firmnessLabel);
+            this.Controls.Remove(delvicidLabel);
+            this.Controls.Remove(Date);
+            this.Controls.Remove(NumberPieces);
+            this.Controls.Remove(StartTime);
+            this.Controls.Remove(tempLabel);
+            this.Controls.Remove(dateLabel);
+            this.Controls.Remove(skidNumberLabel);
+            this.Controls.Remove(piecesNumberLabel);
+            this.Controls.Remove(binWeightLabel);
+            this.Controls.Remove(startTimeLabel);
+            this.Controls.Remove(binSealLabel);
+            this.Controls.Remove(BinSealGrade);
+            this.Controls.Remove(SubmitButton);
         }
 
-        private void InitializeBlockTypeA()
+        private void InitializeBlockTypeA(string productNumber)
         {
-            Label dateLabel = new Label();
+            this.dateLabel = new Label();
             dateLabel.Text = "Lot Date:";
             dateLabel.TextAlign = ContentAlignment.MiddleRight;
             dateLabel.Location = new System.Drawing.Point(140, 218);
@@ -183,7 +209,7 @@ namespace shred_usage_writer
             this.Date.Size = new System.Drawing.Size(140, 50);
             this.Controls.Add(this.Date);
 
-            Label skidNumberLabel = new Label();
+            this.skidNumberLabel = new Label();
             skidNumberLabel.Text = "Skid/Tote Number:";
             skidNumberLabel.TextAlign = ContentAlignment.MiddleRight;
             skidNumberLabel.Location = new System.Drawing.Point(100, 288);
@@ -195,7 +221,7 @@ namespace shred_usage_writer
             this.ToteSkidNumber.Size = new System.Drawing.Size(70, 50);
             this.Controls.Add(this.ToteSkidNumber);
 
-            Label piecesNumberLabel = new Label();
+            this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
             piecesNumberLabel.TextAlign = ContentAlignment.MiddleRight;
             piecesNumberLabel.Location = new System.Drawing.Point(145, 368);
@@ -210,7 +236,7 @@ namespace shred_usage_writer
             this.NumberPieces.Size = new System.Drawing.Size(70, 50);
             this.Controls.Add(this.NumberPieces);
 
-            Label binWeightLabel = new Label();
+            this.binWeightLabel = new Label();
             binWeightLabel.Text = "Bin Weight (lbs.):";
             binWeightLabel.TextAlign = ContentAlignment.MiddleRight;
             binWeightLabel.Location = new System.Drawing.Point(100, 448);
@@ -227,7 +253,7 @@ namespace shred_usage_writer
             this.BinWeight.Size = new System.Drawing.Size(100, 50);
             this.Controls.Add(this.BinWeight);
 
-            Label startTimeLabel = new Label();
+            this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
             startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
             startTimeLabel.Location = new System.Drawing.Point(150, 528);
@@ -242,7 +268,7 @@ namespace shred_usage_writer
             this.StartTime.Size = new System.Drawing.Size(100, 50);
             this.Controls.Add(this.StartTime);
 
-            Label tempLabel = new Label();
+            this.tempLabel = new Label();
             tempLabel.Text = "Temperature (F°):";
             tempLabel.TextAlign = ContentAlignment.MiddleRight;
             tempLabel.Location = new System.Drawing.Point(120, 608);
@@ -265,9 +291,11 @@ namespace shred_usage_writer
             this.SubmitButton.Size = new System.Drawing.Size(110, 40);
             this.SubmitButton.Text = "SUBMIT";
             this.Controls.Add(this.SubmitButton);
+            this.SubmitButton.Click += 
+                delegate (object sender, EventArgs e) { SubmitButton_Clicked(sender, e, productNumber); };
 
-            Label binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:               (By checking this box you confirm that the bin is sealed adequately)";
+            this.binSealLabel = new Label();
+            binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
             binSealLabel.TextAlign = ContentAlignment.MiddleRight;
             binSealLabel.Location = new System.Drawing.Point(460, 188);
             binSealLabel.Size = new System.Drawing.Size(200, 140);
@@ -280,7 +308,7 @@ namespace shred_usage_writer
 
             //Firmness Control
             //
-            Label firmnessLabel = new Label();
+            this.firmnessLabel = new Label();
             firmnessLabel.Text = "Firmness:";
             firmnessLabel.TextAlign = ContentAlignment.MiddleRight;
             firmnessLabel.Location = new System.Drawing.Point(500, 393);
@@ -302,6 +330,7 @@ namespace shred_usage_writer
             this.FirmnessFirm.Location = new System.Drawing.Point(80, 25);
             this.FirmnessFirm.Size = new System.Drawing.Size(30, 30);
             this.FirmnessBox.Controls.Add(this.FirmnessFirm);
+            this.FirmnessFirm.Checked = true;
             //  Second Button
             Label softLabel = new Label();
             softLabel.Text = "Soft";
@@ -320,7 +349,7 @@ namespace shred_usage_writer
 
             //Delvicid Control
             //
-            Label delvicidLabel = new Label();
+            this.delvicidLabel = new Label();
             delvicidLabel.Text = "Delvicid Present:";
             delvicidLabel.TextAlign = ContentAlignment.MiddleRight;
             delvicidLabel.Location = new System.Drawing.Point(500, 463);
@@ -335,29 +364,43 @@ namespace shred_usage_writer
             Label trueDelvicidLabel = new Label();
             trueDelvicidLabel.Text = "Yes";
             trueDelvicidLabel.Location = new System.Drawing.Point(20, 25);
-            trueDelvicidLabel.Size = new System.Drawing.Size(60, 30);
+            trueDelvicidLabel.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(trueDelvicidLabel);
             this.DelvicidTrue = new RadioButton();
             this.DelvicidTrue.Name = "Delvicid True";
             this.DelvicidTrue.Location = new System.Drawing.Point(80, 25);
             this.DelvicidTrue.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidTrue);
+            this.DelvicidTrue.Checked = true;
             //  Second Button
             Label falseDelvicidLabel = new Label();
             falseDelvicidLabel.Text = "No";
-            falseDelvicidLabel.Location = new System.Drawing.Point(110, 25);
-            falseDelvicidLabel.Size = new System.Drawing.Size(60, 30);
-            this.FirmnessBox.Controls.Add(falseDelvicidLabel);
+            falseDelvicidLabel.Location = new System.Drawing.Point(120, 25);
+            falseDelvicidLabel.Size = new System.Drawing.Size(40, 30);
+            this.DelvicidBox.Controls.Add(falseDelvicidLabel);
             this.DelvicidFalse = new RadioButton();
             this.DelvicidFalse.Name = "Delvicid False";
             this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
-            this.DelvicidFalse.Size = new System.Drawing.Size(30, 30);
+            this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidFalse);
             this.Controls.Add(this.DelvicidBox);
             //
             ////
         }
 
-        
+        private void InitializeBlockTypeB()
+        {
+
+        }
+
+        private void SubmitButton_Clicked(object sender, EventArgs e, string productNumber)
+        {
+            this.ws = wb.Worksheet(productNumber);
+
+            this.ws.Worksheet.Cell("A67").Value = "Hello World";
+
+            this.wb.Save();
+        }
+
     }
 }
