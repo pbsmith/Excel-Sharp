@@ -4756,28 +4756,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pbsmi\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages": {}
+    "C:\\Users\\psmith\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
+      "projectUniqueName": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
       "projectName": "shred_usage_writer",
-      "projectPath": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
-      "packagesPath": "C:\\Users\\pbsmi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pbsmi\\workspace\\Excel-Sharp\\shred_usage_writer\\obj\\",
+      "projectPath": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
+      "packagesPath": "C:\\Users\\psmith\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\pbsmi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\psmith\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0-windows"
@@ -4832,7 +4829,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

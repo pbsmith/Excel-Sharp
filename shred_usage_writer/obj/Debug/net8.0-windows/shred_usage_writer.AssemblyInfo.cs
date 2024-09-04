@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("shred_usage_writer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acdcd84a13cf6cc301e3f2f6d44a6b0fa8bdb31b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fe8a0fd1324905164d9c727ff8d7bf54af6e8227")]
 [assembly: System.Reflection.AssemblyProductAttribute("shred_usage_writer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("shred_usage_writer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
