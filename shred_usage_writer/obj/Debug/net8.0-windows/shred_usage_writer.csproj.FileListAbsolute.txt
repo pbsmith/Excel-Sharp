@@ -72,3 +72,4 @@ C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\obj\Debug\net8.0-window
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\obj\Debug\net8.0-windows\shred_usage_writer.pdb
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\obj\Debug\net8.0-windows\shred_usage_writer.genruntimeconfig.cache
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\obj\Debug\net8.0-windows\ref\shred_usage_writer.dll
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\obj\Debug\net8.0-windows\shred_usage_writer.CustomMessageBox.resources
