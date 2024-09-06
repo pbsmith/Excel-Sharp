@@ -16,6 +16,12 @@ namespace shred_usage_writer
             this.Text = "Miceli Dairy Products - Block Usage Reporting Tool";
             InitializeComboBox();
             this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\test_shred_usage.xlsx");
+            // Get the screen width
+            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+            // Set the form's width to half the screen width
+            this.Width = screenWidth / 2;
+            // Position the form to the right side of the screen
+            this.Height = Screen.PrimaryScreen.WorkingArea.Height; // Optional: Set the height to fill the screen
         }
 
 
@@ -1092,14 +1098,8 @@ namespace shred_usage_writer
             return columnName;
         }
 
-        public bool InitializeSubmitCheck()
+        public bool InitializeSubmitCheck(object data)
         {
-            var data = new[]
-                {
-                    new { Column1 = "Value1", Column2 = "Value2" },
-                    new { Column1 = "Value3", Column2 = "Value4" }
-                };
-
             var result = CustomMessageBox.Show(data);
 
             if (result == DialogResult.Yes)
@@ -1115,7 +1115,16 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedTypeA(object sender, EventArgs e, string productNumber)
         {
-            if (InitializeSubmitCheck())
+            var data = new[]
+                {
+                    new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
+                    new { Column1 = "#" + ToteSkidNumber.Value.ToString(), Column2 = NumberPieces.Value.ToString() + " pcs" },
+                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Initials.Text , Column2 = "" }
+                };
+
+            if (InitializeSubmitCheck(data))
             {
                 return;
             }
@@ -1194,6 +1203,19 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedTypeB(object sender, EventArgs e, string productNumber)
         {
+            var data = new[]
+                {
+                    new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
+                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Initials.Text , Column2 = "" }
+                };
+
+            if (InitializeSubmitCheck(data))
+            {
+                return;
+            }
+
             this.ws = wb.Worksheet(productNumber);
 
             bool flag = false;
@@ -1264,6 +1286,19 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedTypeC(object sender, EventArgs e, string productNumber)
         {
+            var data = new[]
+                {
+                    new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
+                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = NumberPieces.Value.ToString() + " pcs" , Column2 = Initials.Text }
+                };
+
+            if (InitializeSubmitCheck(data))
+            {
+                return;
+            }
+
             this.ws = wb.Worksheet(productNumber);
 
             bool flag = false;
@@ -1338,6 +1373,19 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedScrap(object sender, EventArgs e)
         {
+            var data = new[]
+                {
+                    new { Column1 = "Scrap Tote", Column2 = this.Date.Value.ToShortDateString() },
+                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = "#" + ToteSkidNumber.Value.ToString() , Column2 = Initials.Text }
+                };
+
+            if (InitializeSubmitCheck(data))
+            {
+                return;
+            }
+
             this.ws = wb.Worksheet("All Scrap");
 
             bool flag = false;
@@ -1410,6 +1458,18 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedPowder(object sender, EventArgs e)
         {
+            var data = new[]
+                {
+                    new { Column1 = "Powder", Column2 = BagCount.Value.ToString() + " Bag(s)" },
+                    new { Column1 = PowderLotNumber.Text  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Initials.Text.ToString(), Column2 = ""},
+                };
+
+            if (InitializeSubmitCheck(data))
+            {
+                return;
+            }
+
             this.ws = wb.Worksheet("Powder");
 
             if (ws.Worksheet.Cell("C2").IsEmpty())
