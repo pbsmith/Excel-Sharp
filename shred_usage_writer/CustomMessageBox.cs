@@ -18,11 +18,16 @@ namespace shred_usage_writer
         public CustomMessageBox()
         {
             this.Size = new Size(450, 400);
+            this.StartPosition = FormStartPosition.CenterParent;
 
             dataGridView = new DataGridView
             {
                 Dock = DockStyle.Fill,
-                Width = 400
+                Width = 450,
+                ColumnHeadersVisible = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                ReadOnly = true,
             };
 
             buttonPanel = new Panel
