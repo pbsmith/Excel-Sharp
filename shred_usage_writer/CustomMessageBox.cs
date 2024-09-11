@@ -10,6 +10,8 @@ namespace shred_usage_writer
     public class CustomMessageBox : Form
     {
         private DataGridView dataGridView;
+        private Panel statementPanel;
+        private TextBox statement;
         private Button yesButton;
         private Button noButton;
         private Panel buttonPanel;
@@ -30,10 +32,23 @@ namespace shred_usage_writer
                 ReadOnly = true,
             };
 
+            statementPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 100
+            };
+
             buttonPanel = new Panel
             {
                 Dock = DockStyle.Bottom,
                 Height = 70
+            };
+
+            statement = new TextBox
+            {
+                Text = "Please Review and Confirm Before Submitting",
+                Width = 450,
+                TextAlign = HorizontalAlignment.Center
             };
 
             yesButton = new Button
@@ -55,6 +70,7 @@ namespace shred_usage_writer
             
 
             // Add buttons to the panel
+            statementPanel.Controls.Add( statement );
             buttonPanel.Controls.Add(yesButton);
             buttonPanel.Controls.Add(noButton);
 
@@ -63,6 +79,7 @@ namespace shred_usage_writer
 
             Controls.Add(dataGridView);
             Controls.Add(buttonPanel);
+            Controls.Add(statementPanel);
         }
 
         public void SetData(object dataSource)
