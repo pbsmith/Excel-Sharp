@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\psmith\\workspace\\excel-sharp\\shred_usage_writer\\maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\custommessagebox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:custommessagebox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\psmith\\workspace\\excel-sharp\\shred_usage_writer\\custommessagebox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:custommessagebox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|c:\\users\\psmith\\workspace\\excel-sharp\\shred_usage_writer\\maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D2F3036F-B4BF-4CA9-8933-851B2CB2B461}|shred_usage_writer.csproj|solutionrelative:maininterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MainInterface.Designer.cs",
               "DocumentMoniker": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.Designer.cs",
               "RelativeDocumentMoniker": "MainInterface.Designer.cs",
@@ -43,26 +43,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "CustomMessageBox.cs [Design]",
               "DocumentMoniker": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\CustomMessageBox.cs",
               "RelativeDocumentMoniker": "CustomMessageBox.cs",
               "ToolTip": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\CustomMessageBox.cs [Design]",
               "RelativeToolTip": "CustomMessageBox.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T22:05:03.186Z"
+              "WhenOpened": "2024-09-05T22:05:03.186Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "CustomMessageBox.cs",
               "DocumentMoniker": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\CustomMessageBox.cs",
               "RelativeDocumentMoniker": "CustomMessageBox.cs",
               "ToolTip": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\CustomMessageBox.cs",
               "RelativeToolTip": "CustomMessageBox.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAYwDIAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T21:28:22.494Z"
+              "WhenOpened": "2024-09-05T21:28:22.494Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -72,7 +74,7 @@
               "RelativeDocumentMoniker": "MainInterface.cs",
               "ToolTip": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.cs",
               "RelativeToolTip": "MainInterface.cs",
-              "ViewState": "AgIAAKgCAAAAAAAAAAAowJACAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAACoAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-01T22:20:14.915Z",
               "EditorCaption": ""

@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace shred_usage_writer
@@ -13,58 +14,96 @@ namespace shred_usage_writer
     {
         public XLWorkbook wb;
         public IXLWorksheet ws;
+        public string solutionDirectory;
+        public string ogWorkbook;
+        int thisYear = DateTime.Now.Year;
+        int thisMonth = DateTime.Now.Month;
+        int thisDay = DateTime.Now.Day;
         public MainInterface()
         {
+            this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
+            Trace.WriteLine(solutionDirectory);
+            string yearDirectory = solutionDirectory + thisYear.ToString();
+            if(!Directory.Exists(yearDirectory))
+            {
+                Directory.CreateDirectory(yearDirectory);
+            }
+            string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
+            string monthDirectory = Path.Combine(yearDirectory, monthName);
+            if (!Directory.Exists(monthDirectory))
+            {
+                Directory.CreateDirectory(monthDirectory);
+            }
+            string filePath = Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
+            ogWorkbook = Path.Combine(solutionDirectory, "blank.xlsx");
+            if (!File.Exists(filePath))
+            {
+                Trace.WriteLine(ogWorkbook);
+                File.Copy(ogWorkbook, filePath);
+                
+            }
+            this.wb = new XLWorkbook(filePath);
             InitializeComponent();
             this.Text = "Miceli Dairy Products - Block Usage Reporting Tool";
+            this.ShowIcon = false;
             InitializeComboBox();
-            this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\test_shred_usage.xlsx");       // Get the screen width
-            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;       // Set the form's width to half the screen width
-            this.Width = screenWidth / 2;      // Position the form to the right side of the screen
-            this.Height = Screen.PrimaryScreen.WorkingArea.Height;      // Optional: Set the height to fill the screen
+            //this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\blank.xlsx");
+            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+            this.Width = screenWidth / 2;
+            this.Height = Screen.PrimaryScreen.WorkingArea.Height;
         }
 
         //      ERROR PROVIDER
         private ErrorProvider errorProvider;
 
         // Declare Controls
-        internal System.Windows.Forms.MessageBox SubmitCheckBox;
+        internal MessageBox SubmitCheckBox;
         internal Button SubmitCheckBoxYes;
         internal Button SubmitCheckBoxNo;
-        internal System.Windows.Forms.ComboBox ComboBox1;
-        internal System.Windows.Forms.DateTimePicker Date;
-        internal System.Windows.Forms.NumericUpDown ToteSkidNumber;
-        internal System.Windows.Forms.NumericUpDown NumberPieces;
-        internal System.Windows.Forms.NumericUpDown BinWeight;
-        internal System.Windows.Forms.DateTimePicker StartTime;
-        internal System.Windows.Forms.NumericUpDown Temp;
-        internal System.Windows.Forms.Button SubmitButton;
-        internal System.Windows.Forms.CheckBox BinSealGrade;
-        internal System.Windows.Forms.GroupBox FirmnessBox;
-        internal System.Windows.Forms.RadioButton FirmnessFirm;
-        internal System.Windows.Forms.RadioButton FirmnessSoft;
-        internal System.Windows.Forms.GroupBox DelvicidBox;
-        internal System.Windows.Forms.RadioButton DelvicidTrue;
-        internal System.Windows.Forms.RadioButton DelvicidFalse;
-        internal System.Windows.Forms.TextBox Initials;
-        internal System.Windows.Forms.NumericUpDown BagCount;
-        internal System.Windows.Forms.TextBox PowderLotNumber;
+        internal ComboBox ComboBox1;
+        internal DateTimePicker Date;
+        internal NumericUpDown ToteSkidNumber;
+        internal NumericUpDown NumberPieces;
+        internal NumericUpDown BinWeight;
+        internal DateTimePicker StartTime;
+        internal NumericUpDown Temp;
+        internal Button SubmitButton;
+        internal CheckBox BinSealGrade;
+        internal GroupBox FirmnessBox;
+        internal RadioButton FirmnessFirm;
+        internal RadioButton FirmnessSoft;
+        internal GroupBox DelvicidBox;
+        internal RadioButton DelvicidTrue;
+        internal RadioButton DelvicidFalse;
+        internal TextBox Initials;
+        internal NumericUpDown BagCount;
+        internal TextBox PowderLotNumber;
 
 
         //  Declare Labels
-        internal System.Windows.Forms.Label dateLabel;
-        internal System.Windows.Forms.Label skidNumberLabel;
-        internal System.Windows.Forms.Label piecesNumberLabel;
-        internal System.Windows.Forms.Label binWeightLabel;
-        internal System.Windows.Forms.Label startTimeLabel;
-        internal System.Windows.Forms.Label tempLabel;
-        internal System.Windows.Forms.Label binSealLabel;
-        internal System.Windows.Forms.Label firmnessLabel;
-        internal System.Windows.Forms.Label delvicidLabel;
-        internal System.Windows.Forms.Label initialsLabel;
-        internal System.Windows.Forms.Label bagCountLabel;
-        internal System.Windows.Forms.Label powderLotNumberLabel;
+        internal Label dateLabel;
+        internal Label skidNumberLabel;
+        internal Label piecesNumberLabel;
+        internal Label binWeightLabel;
+        internal Label startTimeLabel;
+        internal Label tempLabel;
+        internal Label binSealLabel;
+        internal Label firmnessLabel;
+        internal Label delvicidLabel;
+        internal Label initialsLabel;
+        internal Label bagCountLabel;
+        internal Label powderLotNumberLabel;
 
+        public static DirectoryInfo? GetSolutionDirectoryInfo(string? currentPath = null)
+        {
+            DirectoryInfo? directory = new(
+                currentPath ?? Directory.GetCurrentDirectory());
+            while (directory != null && !directory.GetFiles("*.sln").Any())
+            {
+                directory = directory.Parent;
+            }
+            return directory;
+        }
 
         private void InitializeComboBox()
         {
@@ -197,17 +236,6 @@ namespace shred_usage_writer
                     break;
 
             }
-        }
-
-        public static DirectoryInfo? GetSolutionDirectoryInfo(string? currentPath = null)
-        {
-            DirectoryInfo? directory = new(
-                currentPath ?? Directory.GetCurrentDirectory());
-            while (directory != null && !directory.GetFiles("*.sln").Any())
-            {
-                directory = directory.Parent;
-            }
-            return directory;
         }
 
         private void NewSelection()
@@ -534,6 +562,7 @@ namespace shred_usage_writer
             this.Temp.Minimum = 0.00M;
             this.Temp.Maximum = 50.00M;
             this.Temp.Value = 0.00M;
+            Temp.Text = "";
             this.Temp.Size = new System.Drawing.Size(100, 50);
             Temp.Validating += Temp_Validating;
             this.Controls.Add(this.Temp);
@@ -684,7 +713,7 @@ namespace shred_usage_writer
             this.NumberPieces.Name = "Number of Pieces";
             this.NumberPieces.Minimum = 1;
             this.NumberPieces.Maximum = 100;
-            this.NumberPieces.Value = 160;
+            this.NumberPieces.Text = "";
             this.NumberPieces.Size = new System.Drawing.Size(70, 50);
             this.Controls.Add(this.NumberPieces);
 
@@ -700,9 +729,11 @@ namespace shred_usage_writer
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
-            this.BinWeight.Maximum = 980.00M;
-            this.BinWeight.Value = 960.00M;
+            this.BinWeight.Maximum = 200.00M;
+            this.BinWeight.Value = 0.00M;
+            BinWeight.Text = "";
             this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            BinWeight.Validating += BinWeight_Validating;
             this.Controls.Add(this.BinWeight);
 
             this.startTimeLabel = new Label();
@@ -731,10 +762,12 @@ namespace shred_usage_writer
             this.Temp.Name = "Temperature";
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
-            this.Temp.Minimum = -20.00M;
-            this.Temp.Maximum = 70.00M;
-            this.Temp.Value = 32.00M;
+            this.Temp.Minimum = 0.00M;
+            this.Temp.Maximum = 50.00M;
+            this.Temp.Value = 0.00M;
+            Temp.Text = "";
             this.Temp.Size = new System.Drawing.Size(100, 50);
+            this.Temp.Validating += Temp_Validating;
             this.Controls.Add(this.Temp);
 
             this.SubmitButton = new Button();
@@ -756,6 +789,7 @@ namespace shred_usage_writer
             this.BinSealGrade.Name = "Bin Seal Grade";
             this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
             this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
+            BinSealGrade.Validating += BinSealGrade_Validating;
             this.Controls.Add(this.BinSealGrade);
 
             //Firmness Control
@@ -848,6 +882,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
 
@@ -864,6 +899,8 @@ namespace shred_usage_writer
             this.Date.CustomFormat = "MM-dd-yyyy";
             this.Date.Format = DateTimePickerFormat.Custom;
             this.Date.Size = new System.Drawing.Size(140, 50);
+            Date.Text = "01/01/2024";
+            Date.Validating += LotDate_Validating;
             this.Controls.Add(this.Date);
 
             this.skidNumberLabel = new Label();
@@ -876,6 +913,8 @@ namespace shred_usage_writer
             this.ToteSkidNumber.Location = new System.Drawing.Point(250, 298);
             this.ToteSkidNumber.Name = "Skid Number";
             this.ToteSkidNumber.Size = new System.Drawing.Size(70, 50);
+            ToteSkidNumber.Text = "";
+            ToteSkidNumber.Validating += ToteSkidNumber_Validating;
             this.Controls.Add(this.ToteSkidNumber);
 
             this.binWeightLabel = new Label();
@@ -890,9 +929,11 @@ namespace shred_usage_writer
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
-            this.BinWeight.Maximum = 980.00M;
-            this.BinWeight.Value = 960.00M;
+            this.BinWeight.Maximum = 1200.00M;
+            this.BinWeight.Value = 0.00M;
+            BinWeight.Text = "";
             this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            BinWeight.Validating += BinWeight_Validating;
             this.Controls.Add(this.BinWeight);
 
             this.startTimeLabel = new Label();
@@ -921,10 +962,12 @@ namespace shred_usage_writer
             this.Temp.Name = "Temperature";
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
-            this.Temp.Minimum = -20.00M;
-            this.Temp.Maximum = 70.00M;
-            this.Temp.Value = 32.00M;
+            this.Temp.Minimum = 0.00M;
+            this.Temp.Maximum = 50.00M;
+            this.Temp.Value = 0.00M;
+            Temp.Text = "";
             this.Temp.Size = new System.Drawing.Size(100, 50);
+            Temp.Validating += Temp_Validating;
             this.Controls.Add(this.Temp);
 
             this.SubmitButton = new Button();
@@ -946,6 +989,7 @@ namespace shred_usage_writer
             this.BinSealGrade.Name = "Bin Seal Grade";
             this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
             this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
+            BinSealGrade.Validating += BinSealGrade_Validating;
             this.Controls.Add(this.BinSealGrade);
 
             //Firmness Control
@@ -1043,6 +1087,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
 
@@ -1056,8 +1101,14 @@ namespace shred_usage_writer
             this.Controls.Add(bagCountLabel);
             this.BagCount = new NumericUpDown();
             BagCount.Location = new System.Drawing.Point(250, 298);
-            BagCount.Name = "Skid Number";
+            BagCount.Name = "Bag Count";
             BagCount.Size = new System.Drawing.Size(70, 50);
+            BagCount.Maximum = 10;
+            BagCount.Minimum = 0;
+            BagCount.Increment = 1;
+            BagCount.Value = 0;
+            BagCount.Text = "";
+            BagCount.Validating += BagCount_Validating;
             this.Controls.Add(this.BagCount);
 
             this.startTimeLabel = new Label();
@@ -1085,6 +1136,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(670, 478);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
 
             this.powderLotNumberLabel = new Label();
@@ -1097,6 +1149,7 @@ namespace shred_usage_writer
             PowderLotNumber.Name = "Powder Lot Number";
             PowderLotNumber.Location = new System.Drawing.Point(560, 393);
             PowderLotNumber.Size = new System.Drawing.Size(90, 30);
+            PowderLotNumber.Validating += PowderLotNumber_Validating;
             this.Controls.Add(PowderLotNumber);
 
             this.SubmitButton = new Button();
@@ -1108,6 +1161,9 @@ namespace shred_usage_writer
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedPowder(sender, e); };
         }
+
+
+        //      SUBMITTING AND WRITING METHODS
 
         public static string ColumnNumberToName(int columnNumber)
         {
@@ -1566,6 +1622,40 @@ namespace shred_usage_writer
                 MessageBox.Show("Please enter a valid skid/tote number. Number cannot be 0.");
                 e.Cancel = true;
                 errorProvider.SetError(ToteSkidNumber, "Please Enter a Valid Tote/Skid Number");
+            }
+        }
+
+        private void BagCount_Validating(object? sender, CancelEventArgs e)
+        {
+            errorProvider = new ErrorProvider();
+
+            if (this.BagCount.Value == 0 || this.BagCount.Text == "")
+            {
+                MessageBox.Show("Please enter a valid bag count. Number cannot be 0.");
+                e.Cancel = true;
+                errorProvider.SetError(BagCount, "Please Enter a Valid Bag Count");
+            }
+        }
+
+        private void PowderLotNumber_Validating(object? sender, CancelEventArgs e)
+        {
+            errorProvider = new ErrorProvider();
+
+            if(this.PowderLotNumber.Text.Length < 1 || this.PowderLotNumber.Text.Length > 14)
+            {
+                MessageBox.Show("Please enter a valid powder lot number.");
+                e.Cancel = true;
+                errorProvider.SetError(PowderLotNumber, "Please Enter a Valid Lot");
+            }
+            else if(Regex.IsMatch(PowderLotNumber.Text, @"[^a-zA-Z0-9]"))
+            {
+                MessageBox.Show("Lot number cannot contain special characters.");
+                e.Cancel = true;
+                errorProvider.SetError(PowderLotNumber, "Lot number cannot contain special characters.");
+            }
+            else
+            {
+                e.Cancel = false;
             }
         }
 
