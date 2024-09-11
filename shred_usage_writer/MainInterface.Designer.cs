@@ -37,7 +37,7 @@
             ClientSize = new Size(1589, 1523);
             Margin = new Padding(4, 5, 4, 5);
             Name = "MainInterface";
-            Text = "Form1";
+            Text = "MainInterface";
             ResumeLayout(false);
         }
 
