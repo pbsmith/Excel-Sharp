@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace shred_usage_writer
@@ -22,28 +23,60 @@ namespace shred_usage_writer
         int thisDay = DateTime.Now.Day;
         public MainInterface()
         {
+            //this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
+            //Trace.WriteLine(solutionDirectory);
+            //string yearDirectory = solutionDirectory + thisYear.ToString();
+            //if (!Directory.Exists(yearDirectory))
+            //{
+            //    Directory.CreateDirectory(yearDirectory);
+            //}
+            //string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
+            //string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
+            //if (!Directory.Exists(monthDirectory))
+            //{
+            //    Directory.CreateDirectory(monthDirectory);
+            //}
+            //string filePath = System.IO.Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
+            //ogWorkbook = System.IO.Path.Combine(solutionDirectory, "blank.xlsx");
+            //if (!File.Exists(filePath))
+            //{
+            //    Trace.WriteLine(ogWorkbook);
+            //    File.Copy(ogWorkbook, filePath);
+
+            //}
+            //this.wb = new XLWorkbook(filePath);
+
             this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
             Trace.WriteLine(solutionDirectory);
-            string yearDirectory = solutionDirectory + thisYear.ToString();
+
+            string yearDirectory = System.IO.Path.Combine(solutionDirectory, thisYear.ToString());
             if (!Directory.Exists(yearDirectory))
             {
                 Directory.CreateDirectory(yearDirectory);
             }
+
             string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
             string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
             if (!Directory.Exists(monthDirectory))
             {
                 Directory.CreateDirectory(monthDirectory);
             }
-            string filePath = System.IO.Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
-            ogWorkbook = System.IO.Path.Combine(solutionDirectory, "blank.xlsx");
+
+            string filePath = System.IO.Path.Combine(monthDirectory, $"{thisDay}-{monthName}_Shred_Usage_Output.xlsx");
+
+            // Extract the embedded resource and get its path
+            ogWorkbook = ExtractBlankExcelTemplate();
+
             if (!File.Exists(filePath))
             {
                 Trace.WriteLine(ogWorkbook);
                 File.Copy(ogWorkbook, filePath);
-
             }
+
+            // Load the new workbook
             this.wb = new XLWorkbook(filePath);
+
+
             InitializeComponent();
             this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
             this.ShowIcon = false;
@@ -56,6 +89,33 @@ namespace shred_usage_writer
             this.FormBorderStyle = FormBorderStyle.None;  // Hides the title bar
         }
 
+        private string ExtractBlankExcelTemplate()
+        {
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "blank.xlsx");
+
+            // Prevent unnecessary extraction if the file already exists
+            if (!File.Exists(tempPath))
+            {
+                string resourceName = "shred_usage_writer.Resources.blank.xlsx"; // Adjust with your namespace
+
+                using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                    {
+                        using (FileStream fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
+                        {
+                            stream.CopyTo(fileStream);
+                        }
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"Embedded resource not found: {resourceName}");
+                    }
+                }
+            }
+
+            return tempPath;
+        }
 
 
         FlowLayoutPanel rightPanel = new FlowLayoutPanel();
