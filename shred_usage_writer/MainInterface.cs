@@ -360,7 +360,7 @@ namespace shred_usage_writer
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
             }
                              
 
@@ -465,9 +465,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeA(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Text = "Bin Seal Confirmation:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(600, 300);
+            binSealLabel.Size = new System.Drawing.Size(300, 50);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -601,7 +601,7 @@ namespace shred_usage_writer
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
             }
 
             dateLabel = new Label();
@@ -677,9 +677,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeB(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Text = "Bin Seal Confirmation:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(600, 300);
+            binSealLabel.Size = new System.Drawing.Size(300, 50);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -808,7 +808,7 @@ namespace shred_usage_writer
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
             }
 
             dateLabel = new Label();
@@ -896,9 +896,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeC(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Text = "Bin Seal Confirmation:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(600, 300);
+            binSealLabel.Size = new System.Drawing.Size(300, 50);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1029,7 +1029,7 @@ namespace shred_usage_writer
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
             }
 
 
@@ -1121,9 +1121,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedScrap(sender, e); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Text = "Bin Seal Confirmation:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(600, 300);
+            binSealLabel.Size = new System.Drawing.Size(300, 50);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1255,7 +1255,7 @@ namespace shred_usage_writer
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Adds space between rows
             }
 
             this.bagCountLabel = new Label();
