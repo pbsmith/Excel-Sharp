@@ -347,22 +347,27 @@ namespace shred_usage_writer
 
         private void InitializeBlockTypeA(string productNumber)
         {
+
+            // Define a fixed space between rows (e.g., 10% for spacing)
+            float spacePercentage = 10F;
+
             tableLayout = new TableLayoutPanel();
             tableLayout.ColumnCount = 2;
             tableLayout.RowCount = 9;
             tableLayout.Dock = DockStyle.None;  // Remove automatic docking
             tableLayout.AutoSize = true;
-            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Location = new System.Drawing.Point(300, 250); // Move it right (X=300) and down (Y=200)
             tableLayout.Width = this.Width / 2; // Take up about half the width
             tableLayout.Padding = new Padding(20);
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
             tableLayout.RowStyles.Clear(); // Clear any default row styles
+
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
             }
-                             
+
 
             dateLabel = new Label();
             dateLabel.Text = "Lot Date:";
@@ -590,18 +595,19 @@ namespace shred_usage_writer
         {
             tableLayout = new TableLayoutPanel();
             tableLayout.ColumnCount = 2;
-            tableLayout.RowCount = 9;
+            tableLayout.RowCount = 8;
             tableLayout.Dock = DockStyle.None;  // Remove automatic docking
             tableLayout.AutoSize = true;
-            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Location = new System.Drawing.Point(300, 250); // Move it right (X=300) and down (Y=200)
             tableLayout.Width = this.Width / 2; // Take up about half the width
             tableLayout.Padding = new Padding(20);
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
             tableLayout.RowStyles.Clear(); // Clear any default row styles
+
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
             }
 
             dateLabel = new Label();
@@ -786,7 +792,7 @@ namespace shred_usage_writer
             tableLayout.Controls.Add(DelvicidBox, 1, 5);
             tableLayout.Controls.Add(initialsLabel, 0, 6);
             tableLayout.Controls.Add(Initials, 1, 6);
-            tableLayout.Controls.Add(SubmitButton, 1, 9);
+            tableLayout.Controls.Add(SubmitButton, 1, 8);
             tableLayout.Controls.Add(binSealLabel, 0, 7);
             tableLayout.Controls.Add(BinSealGrade, 1, 7);
 
@@ -795,20 +801,22 @@ namespace shred_usage_writer
 
         private void InitializeBlockTypeC(string productNumber)
         {
+
             tableLayout = new TableLayoutPanel();
             tableLayout.ColumnCount = 2;
             tableLayout.RowCount = 9;
             tableLayout.Dock = DockStyle.None;  // Remove automatic docking
             tableLayout.AutoSize = true;
-            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Location = new System.Drawing.Point(300, 250); // Move it right (X=300) and down (Y=200)
             tableLayout.Width = this.Width / 2; // Take up about half the width
             tableLayout.Padding = new Padding(20);
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
             tableLayout.RowStyles.Clear(); // Clear any default row styles
+
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
             }
 
             dateLabel = new Label();
@@ -1016,20 +1024,24 @@ namespace shred_usage_writer
 
         private void InitializeScrap()
         {
+            // Define a fixed space between rows (e.g., 10% for spacing)
+            float spacePercentage = 10F;
+
             tableLayout = new TableLayoutPanel();
             tableLayout.ColumnCount = 2;
             tableLayout.RowCount = 9;
             tableLayout.Dock = DockStyle.None;  // Remove automatic docking
             tableLayout.AutoSize = true;
-            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Location = new System.Drawing.Point(300, 250); // Move it right (X=300) and down (Y=200)
             tableLayout.Width = this.Width / 2; // Take up about half the width
             tableLayout.Padding = new Padding(20);
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
             tableLayout.RowStyles.Clear(); // Clear any default row styles
+
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
             }
 
 
@@ -1242,20 +1254,24 @@ namespace shred_usage_writer
 
         private void InitializePowder()
         {
+            // Define a fixed space between rows (e.g., 10% for spacing)
+            float spacePercentage = 10F;
+
             tableLayout = new TableLayoutPanel();
             tableLayout.ColumnCount = 2;
-            tableLayout.RowCount = 9;
+            tableLayout.RowCount = 4;
             tableLayout.Dock = DockStyle.None;  // Remove automatic docking
             tableLayout.AutoSize = true;
-            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Location = new System.Drawing.Point(300, 250); // Move it right (X=300) and down (Y=200)
             tableLayout.Width = this.Width / 2; // Take up about half the width
             tableLayout.Padding = new Padding(20);
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
             tableLayout.RowStyles.Clear(); // Clear any default row styles
+
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
             }
 
             this.bagCountLabel = new Label();
