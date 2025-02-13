@@ -365,11 +365,8 @@ namespace shred_usage_writer
 
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-<<<<<<< HEAD
                 tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
-=======
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
->>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
+
             }
 
 
@@ -611,11 +608,7 @@ namespace shred_usage_writer
 
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-<<<<<<< HEAD
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
-=======
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
->>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
             }
 
             dateLabel = new Label();
@@ -824,11 +817,7 @@ namespace shred_usage_writer
 
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-<<<<<<< HEAD
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
-=======
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
->>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
             }
 
             dateLabel = new Label();
@@ -1053,11 +1042,7 @@ namespace shred_usage_writer
 
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-<<<<<<< HEAD
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F)); // Adds space between rows
-=======
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
->>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 70F));
             }
 
 
@@ -1287,11 +1272,7 @@ namespace shred_usage_writer
 
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
-<<<<<<< HEAD
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Adds space between rows
-=======
-                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F)); // Even height for each row
->>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             }
 
             this.bagCountLabel = new Label();
@@ -1365,7 +1346,7 @@ namespace shred_usage_writer
             tableLayout.Controls.Add(Initials, 1, 2);
             tableLayout.Controls.Add(powderLotNumberLabel, 0, 3);
             tableLayout.Controls.Add(PowderLotNumber, 1, 3);
-            tableLayout.Controls.Add(SubmitButton, 0, 4);
+            tableLayout.Controls.Add(SubmitButton, 1, 4);
 
 
             // Add TableLayoutPanel to Form
