@@ -40,7 +40,11 @@
               "RelativeDocumentMoniker": "MainInterface.cs",
               "ToolTip": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\MainInterface.cs",
               "RelativeToolTip": "MainInterface.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEUDAABFAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAO0EAAAAAAAAAAAwwPoEAAAAAAAAAAAAAA==",
+>>>>>>> 8ef6ef934a38cde5c90048167cf913be591c7a8d
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-01T22:20:14.915Z",
               "EditorCaption": ""
