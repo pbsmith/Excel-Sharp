@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace shred_usage_writer
 {
@@ -20,7 +22,11 @@ namespace shred_usage_writer
         public CustomMessageBox()
         {
             this.Size = new Size(450, 400);
-            this.StartPosition = FormStartPosition.CenterParent;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MaximumSize = new Size(450, 400);
+            this.MinimumSize = new Size(450, 400);
 
             dataGridView = new DataGridView
             {
@@ -30,6 +36,9 @@ namespace shred_usage_writer
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 ReadOnly = true,
+                AllowUserToResizeColumns = false,
+                AllowUserToResizeRows = false,
+                Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular)
             };
 
             statementPanel = new Panel
@@ -48,26 +57,33 @@ namespace shred_usage_writer
             {
                 Text = "Please Review and Confirm Before Submitting",
                 Width = 450,
-                TextAlign = HorizontalAlignment.Center
+                TextAlign = HorizontalAlignment.Center,
+
             };
+
+            statement.Enabled = false;
 
             yesButton = new Button
             {
-                Text = "YES",
+                Text = "SUBMIT",
                 DialogResult = DialogResult.Yes,
                 Dock = DockStyle.Left,
+                Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular),
                 Width = this.ClientSize.Width/2
             };
 
             noButton = new Button
             {
-                Text = "NO",
+                Text = "CANCEL",
                 DialogResult = DialogResult.No,
                 Dock = DockStyle.Right,
-                Width = this.ClientSize.Width/2
+                Width = this.ClientSize.Width/2,
+                Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular)
             };
 
-            
+            dataGridView.Enabled = false;
+
+
 
             // Add buttons to the panel
             statementPanel.Controls.Add( statement );

@@ -24,7 +24,7 @@ namespace shred_usage_writer
             this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
             Trace.WriteLine(solutionDirectory);
             string yearDirectory = solutionDirectory + thisYear.ToString();
-            if(!Directory.Exists(yearDirectory))
+            if (!Directory.Exists(yearDirectory))
             {
                 Directory.CreateDirectory(yearDirectory);
             }
@@ -40,20 +40,32 @@ namespace shred_usage_writer
             {
                 Trace.WriteLine(ogWorkbook);
                 File.Copy(ogWorkbook, filePath);
-                
+
             }
             this.wb = new XLWorkbook(filePath);
             InitializeComponent();
-            this.Text = "Miceli Dairy Products - Block Usage Reporting Tool";
+            this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
             this.ShowIcon = false;
             InitializeComboBox();
-            //this.wb = new XLWorkbook(@"C:\Users\psmith\workspace\Excel-Sharp\blank.xlsx");
-            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
-            this.Width = screenWidth / 2;
-            this.Height = Screen.PrimaryScreen.WorkingArea.Height;
+            InitializeRightPanel();
+            //int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+            //this.Width = screenWidth;
+            //this.Height = Screen.PrimaryScreen.WorkingArea.Height;
+            this.WindowState = FormWindowState.Maximized; // Maximizes the window
+            this.FormBorderStyle = FormBorderStyle.None;  // Hides the title bar
         }
 
-        //      ERROR PROVIDER
+
+
+        FlowLayoutPanel rightPanel = new FlowLayoutPanel();
+
+        // Declare List
+        private List<string> L = new List<string>();
+
+        // Declare Dynamic Item Name
+        private string itemString;
+
+        // Declare Error Provider
         private ErrorProvider errorProvider;
 
         // Declare Controls
@@ -81,6 +93,7 @@ namespace shred_usage_writer
 
 
         //  Declare Labels
+        internal Label comboBoxLabel;
         internal Label dateLabel;
         internal Label skidNumberLabel;
         internal Label piecesNumberLabel;
@@ -108,21 +121,69 @@ namespace shred_usage_writer
         private void InitializeComboBox()
         {
             this.ComboBox1 = new ComboBox();
-            this.ComboBox1.Location = new System.Drawing.Point(100, 38);
+            this.ComboBox1.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 2, 60);
             this.ComboBox1.Name = "ComboBox1";
-            this.ComboBox1.Size = new System.Drawing.Size(200, 50);
+            this.ComboBox1.Size = new System.Drawing.Size(360, 50);
+            ComboBox1.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.ComboBox1.TabIndex = 0;
             this.ComboBox1.Text = "Select Block Item";
             string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000508",
             "001-000525", "001-000528", "008-000005 PS Purchased", "008-000021 WM Purchased", "008-000001 Asiago", "008-000002 Cheddar", "008-000006 Parmesan",
             "008-000010 White Ched", "008-000022 Meunster", "008-000007 Provolone", "002-000035 Scrap", "Powder"};
             ComboBox1.Items.AddRange(installs);
+            ComboBox1.CausesValidation = false;
             this.Controls.Add(this.ComboBox1);
+
+            comboBoxLabel = new Label();
+            comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2)-180, 60);
+            comboBoxLabel.Size = new System.Drawing.Size(180, 50);
+            comboBoxLabel.Name = "comboBoxLabel";
+            comboBoxLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
+            comboBoxLabel.Text = "ITEM SELECT";
+            this.Controls.Add(comboBoxLabel);
+
+
 
             // Hook up the event handler.
             this.ComboBox1.SelectedIndexChanged +=
                 new System.EventHandler(ComboBox1_SelectedIndexChanged);
         }
+
+        private void InitializeRightPanel()
+        {
+            rightPanel.Size = new Size((this.ClientSize.Width / 3) * 2, this.ClientSize.Height / 3); // Right half, top third
+            rightPanel.Location = new Point((this.ClientSize.Width / 5) * 4, 70); // Position at top-right
+            rightPanel.BackColor = System.Drawing.Color.White;
+            rightPanel.FlowDirection = FlowDirection.TopDown;
+            rightPanel.BorderStyle = BorderStyle.FixedSingle;
+            rightPanel.AutoScroll = true;
+
+            this.Controls.Add(rightPanel);
+
+            // Example list of strings
+            List<string> items = new List<string> { "", "", "", "", "", "", "", "", "", "" };
+
+            foreach (string item in items)
+            {
+                Label label = new Label();
+                label.Text = item;
+                label.ForeColor = System.Drawing.Color.Black;
+                label.BackColor = System.Drawing.Color.White;
+                label.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold); // Bigger text
+                label.AutoSize = true;
+                rightPanel.Controls.Add(label);
+            }
+
+            Label labelVersion = new Label();
+            labelVersion.Location = new Point((this.ClientSize.Width / 5) * 4, 50);
+            labelVersion.Font = new System.Drawing.Font("Arial", 8, FontStyle.Regular);
+            labelVersion.Size = new Size(500, 60);
+            labelVersion.Text = "v1.0.0                                         PBS2025";
+            labelVersion.ForeColor = System.Drawing.Color.Gray;
+            this.Controls.Add(labelVersion);
+
+        }
+
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -292,7 +353,7 @@ namespace shred_usage_writer
             Date.CustomFormat = "MM-dd-yyyy";
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(140, 50);
-            Date.Text = "01/01/2024";
+            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
             this.Controls.Add(Date);
 
@@ -493,6 +554,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
@@ -510,7 +572,7 @@ namespace shred_usage_writer
             Date.CustomFormat = "MM-dd-yyyy";
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(140, 50);
-            Date.Text = "01/01/2024";
+            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
             this.Controls.Add(Date);
 
@@ -679,6 +741,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.CharacterCasing = CharacterCasing.Upper;
             this.Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
@@ -696,7 +759,7 @@ namespace shred_usage_writer
             Date.CustomFormat = "MM-dd-yyyy";
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(140, 50);
-            Date.Text = "01/01/2024";
+            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
             this.Controls.Add(Date);
 
@@ -882,6 +945,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
@@ -899,7 +963,7 @@ namespace shred_usage_writer
             this.Date.CustomFormat = "MM-dd-yyyy";
             this.Date.Format = DateTimePickerFormat.Custom;
             this.Date.Size = new System.Drawing.Size(140, 50);
-            Date.Text = "01/01/2024";
+            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
             this.Controls.Add(this.Date);
 
@@ -1087,6 +1151,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(660, 578);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
         }
@@ -1136,6 +1201,7 @@ namespace shred_usage_writer
             this.Initials.Name = "Initials";
             this.Initials.Location = new System.Drawing.Point(670, 478);
             this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
             this.Controls.Add(this.Initials);
 
@@ -1186,7 +1252,7 @@ namespace shred_usage_writer
 
             if (result == DialogResult.Yes)
             {
-                MessageBox.Show("Block was successfully tracked");
+                MessageBox.Show("Item was successfully tracked");
                 return false;
             }
             else
@@ -1282,6 +1348,21 @@ namespace shred_usage_writer
                 }
             }
 
+            string i = "";
+            if(ComboBox1.Text.ToString()== "008-000005 PS Purchased" || ComboBox1.Text.ToString()== "008-000021 WM Purchased")
+            {
+                string itemText = TrimItemNumber(ComboBox1.Text.ToString());
+                i = itemText + "    Tote/Bin #: " + ToteSkidNumber.Value.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                        + "    ID: " + Initials.Text.ToString();
+
+            }
+            else
+            {
+                i = ComboBox1.Text.ToString() + "    Tote/Bin #: " + ToteSkidNumber.Value.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                        + "    ID: " + Initials.Text.ToString();
+            }
+            UpdateList(i);
+
             NewSelection();
             this.wb.Save();
         }
@@ -1366,6 +1447,10 @@ namespace shred_usage_writer
                     rowNumber += 1;
                 }
             }
+            string itemText = TrimItemNumber(ComboBox1.Text.ToString());
+            string i = itemText + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                    + "    ID: " + Initials.Text.ToString();
+            UpdateList(i);
 
             NewSelection();
             this.wb.Save();
@@ -1456,6 +1541,11 @@ namespace shred_usage_writer
                 }
             }
 
+            string itemText = TrimItemNumber(ComboBox1.Text.ToString());
+            string i = itemText + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                    + "    ID: " + Initials.Text.ToString();
+            UpdateList(i);
+
             NewSelection();
             this.wb.Save();
         }
@@ -1543,6 +1633,10 @@ namespace shred_usage_writer
                 }
             }
 
+            string i = ComboBox1.Text.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Weight: " + BinWeight.Value.ToString() + "lbs.    Time: " + StartTime.Value.ToShortTimeString()
+                    + "    ID: " + Initials.Text.ToString();
+            UpdateList(i);
+
             NewSelection();
             this.wb.Save();
         }
@@ -1591,6 +1685,10 @@ namespace shred_usage_writer
                 }
             }
 
+            string i = ComboBox1.Text.ToString() + "    Bag Count: " + BagCount.Value.ToString() + "    Lot #: " + PowderLotNumber.Text.ToString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                    + "    ID: " + Initials.Text.ToString();
+            UpdateList(i);
+
             NewSelection();
             this.wb.Save();
         }
@@ -1602,14 +1700,30 @@ namespace shred_usage_writer
         {
             errorProvider = new ErrorProvider();
 
-            DateTime sixMonthsAgo = DateTime.Now.AddMonths(-6);
-            DateTime sixMonthsFurther = DateTime.Now.AddMonths(6);
+            DateTime sixMonthsAgo = DateTime.Now.AddMonths(-2);
+            DateTime sixMonthsFurther = DateTime.Now.AddMonths(2);
 
-            if (this.Date.Value <= sixMonthsAgo || this.Date.Value >= sixMonthsFurther)
+            if (this.Date.Value <= sixMonthsAgo)
             {
-                MessageBox.Show($"The lot date ({this.Date.Value.Date}) is not a valid lot date because it is six months or more away from today's date. Please enter a valid lot date");
+                MessageBox.Show($"This item's lot date is two months in the past. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
+            }
+            else if (this.Date.Value >= sixMonthsFurther)
+            {
+                MessageBox.Show($"This item's lot date is two months or more in the future. Please enter a valid lot date or contact your manager.");
+                e.Cancel = true;
+                errorProvider.SetError(Date, "Please Enter a Valid Date");
+            }
+            else if (this.Date.Value == DateTime.Today)
+            {
+                MessageBox.Show($"This item's lot date is today's date. Please enter a valid lot date or contact your manager.");
+                e.Cancel = true;
+                errorProvider.SetError(Date, "Please Enter a Valid Date");
+            }
+            else
+            {
+                ClearValidationError(Date, e);
             }
         }
 
@@ -1617,11 +1731,15 @@ namespace shred_usage_writer
         {
             errorProvider = new ErrorProvider();
 
-            if(this.ToteSkidNumber.Value == 0 || this.ToteSkidNumber.Text == "")
+            if (this.ToteSkidNumber.Value == 0 || this.ToteSkidNumber.Text == "")
             {
                 MessageBox.Show("Please enter a valid skid/tote number. Number cannot be 0.");
                 e.Cancel = true;
                 errorProvider.SetError(ToteSkidNumber, "Please Enter a Valid Tote/Skid Number");
+            }
+            else
+            {
+                ClearValidationError(ToteSkidNumber, e);
             }
         }
 
@@ -1635,19 +1753,23 @@ namespace shred_usage_writer
                 e.Cancel = true;
                 errorProvider.SetError(BagCount, "Please Enter a Valid Bag Count");
             }
+            else
+            {
+                ClearValidationError(BagCount, e);
+            }
         }
 
         private void PowderLotNumber_Validating(object? sender, CancelEventArgs e)
         {
             errorProvider = new ErrorProvider();
 
-            if(this.PowderLotNumber.Text.Length < 1 || this.PowderLotNumber.Text.Length > 14)
+            if (this.PowderLotNumber.Text.Length < 1 || this.PowderLotNumber.Text.Length > 14)
             {
                 MessageBox.Show("Please enter a valid powder lot number.");
                 e.Cancel = true;
                 errorProvider.SetError(PowderLotNumber, "Please Enter a Valid Lot");
             }
-            else if(Regex.IsMatch(PowderLotNumber.Text, @"[^a-zA-Z0-9]"))
+            else if (Regex.IsMatch(PowderLotNumber.Text, @"[^a-zA-Z0-9]"))
             {
                 MessageBox.Show("Lot number cannot contain special characters.");
                 e.Cancel = true;
@@ -1655,7 +1777,7 @@ namespace shred_usage_writer
             }
             else
             {
-                e.Cancel = false;
+                ClearValidationError(PowderLotNumber, e);
             }
         }
 
@@ -1669,6 +1791,10 @@ namespace shred_usage_writer
                 e.Cancel = true;
                 errorProvider.SetError(BinWeight, "Please Enter a Valid Weight");
             }
+            else
+            {
+                ClearValidationError(BinWeight, e);
+            }
         }
 
         private void Temp_Validating(object? sender, CancelEventArgs e)
@@ -1681,17 +1807,25 @@ namespace shred_usage_writer
                 e.Cancel = true;
                 errorProvider.SetError(Temp, "Please Enter a Valid Temperature");
             }
+            else
+            {
+                ClearValidationError(Temp, e);
+            }
         }
 
         private void BinSealGrade_Validating(object? sender, CancelEventArgs e)
         {
             errorProvider = new ErrorProvider();
 
-            if(BinSealGrade.Checked == false)
+            if (BinSealGrade.Checked == false)
             {
                 MessageBox.Show("Please mark that you have verified the quality of the block's seal.");
                 e.Cancel = true;
                 errorProvider.SetError(BinSealGrade, "Please Check to Verify Seal Quality");
+            }
+            else
+            {
+                ClearValidationError(BinSealGrade, e);
             }
         }
 
@@ -1699,13 +1833,13 @@ namespace shred_usage_writer
         {
             errorProvider = new ErrorProvider();
 
-            if(Initials.Text.Length < 2 || Initials.Text.Length > 3)
+            if (Initials.Text.Length < 2 || Initials.Text.Length > 3)
             {
                 MessageBox.Show("Initials must be 2-3 letters in length.");
                 e.Cancel = true;
                 errorProvider.SetError(Initials, "Initials must be 2-3 letters in length");
             }
-            else if(Regex.IsMatch(Initials.Text, @"\d") || Regex.IsMatch(Initials.Text, @"[^a-zA-Z0-9]"))
+            else if (Regex.IsMatch(Initials.Text, @"\d") || Regex.IsMatch(Initials.Text, @"[^a-zA-Z0-9]"))
             {
                 MessageBox.Show("Initials cannot contain numbers or special characters.");
                 e.Cancel = true;
@@ -1713,8 +1847,45 @@ namespace shred_usage_writer
             }
             else
             {
-                e.Cancel = false;
+                ClearValidationError(Initials, e);
             }
+        }
+
+        private void ClearValidationError(System.Windows.Forms.Control control, CancelEventArgs e)
+        {
+            e.Cancel = false;
+            errorProvider.SetError(control, "");
+        }
+
+        private void UpdateList(string item)
+        {
+            if (!string.IsNullOrEmpty(item))
+            {
+                if (L.Count == 10)
+                {
+                    L.RemoveAt(0); // Remove oldest entry
+                }
+
+                L.Add(item);
+
+                rightPanel.Controls.Clear();
+
+                foreach (string i in L)
+                {
+                    Label label = new Label();
+                    label.Text = i;
+                    label.ForeColor = System.Drawing.Color.Black;
+                    label.BackColor = System.Drawing.Color.White;
+                    label.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold); // Bigger text
+                    label.AutoSize = true;
+                    rightPanel.Controls.Add(label);
+                }
+            }
+        }
+
+        private string TrimItemNumber(string item)
+        {
+            return item.Substring(11);
         }
     }
 }
