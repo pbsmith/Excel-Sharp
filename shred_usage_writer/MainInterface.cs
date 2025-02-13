@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -29,13 +30,13 @@ namespace shred_usage_writer
                 Directory.CreateDirectory(yearDirectory);
             }
             string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
-            string monthDirectory = Path.Combine(yearDirectory, monthName);
+            string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
             if (!Directory.Exists(monthDirectory))
             {
                 Directory.CreateDirectory(monthDirectory);
             }
-            string filePath = Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
-            ogWorkbook = Path.Combine(solutionDirectory, "blank.xlsx");
+            string filePath = System.IO.Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
+            ogWorkbook = System.IO.Path.Combine(solutionDirectory, "blank.xlsx");
             if (!File.Exists(filePath))
             {
                 Trace.WriteLine(ogWorkbook);
@@ -58,6 +59,8 @@ namespace shred_usage_writer
 
 
         FlowLayoutPanel rightPanel = new FlowLayoutPanel();
+        TableLayoutPanel tableLayout;
+
 
         // Declare List
         private List<string> L = new List<string>();
@@ -121,7 +124,7 @@ namespace shred_usage_writer
         private void InitializeComboBox()
         {
             this.ComboBox1 = new ComboBox();
-            this.ComboBox1.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 2, 60);
+            this.ComboBox1.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 2, 90);
             this.ComboBox1.Name = "ComboBox1";
             this.ComboBox1.Size = new System.Drawing.Size(360, 50);
             ComboBox1.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -135,8 +138,8 @@ namespace shred_usage_writer
             this.Controls.Add(this.ComboBox1);
 
             comboBoxLabel = new Label();
-            comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2)-180, 60);
-            comboBoxLabel.Size = new System.Drawing.Size(180, 50);
+            comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2)-220, 90);
+            comboBoxLabel.Size = new System.Drawing.Size(220, 50);
             comboBoxLabel.Name = "comboBoxLabel";
             comboBoxLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             comboBoxLabel.Text = "ITEM SELECT";
@@ -152,7 +155,7 @@ namespace shred_usage_writer
         private void InitializeRightPanel()
         {
             rightPanel.Size = new Size((this.ClientSize.Width / 3) * 2, this.ClientSize.Height / 3); // Right half, top third
-            rightPanel.Location = new Point((this.ClientSize.Width / 5) * 4, 70); // Position at top-right
+            rightPanel.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, 70); // Position at top-right
             rightPanel.BackColor = System.Drawing.Color.White;
             rightPanel.FlowDirection = FlowDirection.TopDown;
             rightPanel.BorderStyle = BorderStyle.FixedSingle;
@@ -175,7 +178,7 @@ namespace shred_usage_writer
             }
 
             Label labelVersion = new Label();
-            labelVersion.Location = new Point((this.ClientSize.Width / 5) * 4, 50);
+            labelVersion.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, 50);
             labelVersion.Font = new System.Drawing.Font("Arial", 8, FontStyle.Regular);
             labelVersion.Size = new Size(500, 60);
             labelVersion.Text = "v1.0.0                                         PBS2025";
@@ -338,143 +341,147 @@ namespace shred_usage_writer
             this.Controls.Remove(powderLotNumberLabel);
             this.Controls.Remove(PowderLotNumber);
             if (PowderLotNumber != null) { PowderLotNumber.Dispose(); }
+            this.Controls.Remove(tableLayout);
+            if(tableLayout != null) { tableLayout.Dispose(); }
         }
 
         private void InitializeBlockTypeA(string productNumber)
         {
+            tableLayout = new TableLayoutPanel();
+            tableLayout.ColumnCount = 2;
+            tableLayout.RowCount = 9;
+            tableLayout.Dock = DockStyle.None;  // Remove automatic docking
+            tableLayout.AutoSize = true;
+            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Width = this.Width / 2; // Take up about half the width
+            tableLayout.Padding = new Padding(20);
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+            }
+                             
+
             dateLabel = new Label();
             dateLabel.Text = "Lot Date:";
-            dateLabel.TextAlign = ContentAlignment.MiddleRight;
-            dateLabel.Location = new System.Drawing.Point(140, 218);
+            dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            dateLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(dateLabel);
             Date = new DateTimePicker();
-            Date.Location = new System.Drawing.Point(250, 218);
             Date.Name = "Date Picker";
             Date.CustomFormat = "MM-dd-yyyy";
+            Date.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             Date.Format = DateTimePickerFormat.Custom;
-            Date.Size = new System.Drawing.Size(140, 50);
+            Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
-            this.Controls.Add(Date);
 
             skidNumberLabel = new Label();
             skidNumberLabel.Text = "Skid/Tote Number:";
-            skidNumberLabel.TextAlign = ContentAlignment.MiddleRight;
-            skidNumberLabel.Location = new System.Drawing.Point(100, 288);
-            skidNumberLabel.Size = new System.Drawing.Size(140, 50);
+            skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            skidNumberLabel.Size = new System.Drawing.Size(350, 50);
             this.Controls.Add(skidNumberLabel);
             ToteSkidNumber = new NumericUpDown();
-            ToteSkidNumber.Location = new System.Drawing.Point(250, 298);
             ToteSkidNumber.Name = "Skid Number";
-            ToteSkidNumber.Size = new System.Drawing.Size(70, 50);
+            ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
             ToteSkidNumber.Maximum = 199;
             ToteSkidNumber.Minimum = 0;
             ToteSkidNumber.Value = 0;
             ToteSkidNumber.Text = "";
             ToteSkidNumber.Validating += ToteSkidNumber_Validating;
-            this.Controls.Add(ToteSkidNumber);
 
             this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
-            piecesNumberLabel.TextAlign = ContentAlignment.MiddleRight;
-            piecesNumberLabel.Location = new System.Drawing.Point(145, 368);
-            piecesNumberLabel.Size = new System.Drawing.Size(90, 50);
+            piecesNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            piecesNumberLabel.Size = new System.Drawing.Size(350, 50);
             this.Controls.Add(piecesNumberLabel);
             this.NumberPieces = new NumericUpDown();
-            this.NumberPieces.Location = new System.Drawing.Point(250, 378);
             this.NumberPieces.Name = "Number of Pieces";
+            NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.NumberPieces.Minimum = 1;
             this.NumberPieces.Maximum = 200;
             this.NumberPieces.Value = 160;
-            this.NumberPieces.Size = new System.Drawing.Size(70, 50);
-            this.Controls.Add(this.NumberPieces);
+            this.NumberPieces.Size = new System.Drawing.Size(90, 50);
 
             this.binWeightLabel = new Label();
             binWeightLabel.Text = "Bin Weight (lbs.):";
-            binWeightLabel.TextAlign = ContentAlignment.MiddleRight;
-            binWeightLabel.Location = new System.Drawing.Point(100, 448);
-            binWeightLabel.Size = new System.Drawing.Size(140, 50);
+            binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binWeightLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(binWeightLabel);
             this.BinWeight = new NumericUpDown();
-            this.BinWeight.Location = new System.Drawing.Point(250, 458);
             this.BinWeight.Name = "Bin Weight";
+            BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
             this.BinWeight.Maximum = 1200.00M;
             this.BinWeight.Value = 0.00M;
             BinWeight.Text = "";
-            this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            this.BinWeight.Size = new System.Drawing.Size(150, 50);
             BinWeight.Validating += BinWeight_Validating;
-            this.Controls.Add(this.BinWeight);
 
             this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
-            startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
-            startTimeLabel.Location = new System.Drawing.Point(150, 528);
-            startTimeLabel.Size = new System.Drawing.Size(90, 50);
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(startTimeLabel);
             this.StartTime = new DateTimePicker();
             this.StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.StartTime.Format = DateTimePickerFormat.Custom;
             this.StartTime.ShowUpDown = true;
             this.StartTime.Location = new System.Drawing.Point(250, 538);
             this.StartTime.Name = "Start Time";
-            this.StartTime.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(this.StartTime);
+            this.StartTime.Size = new System.Drawing.Size(120, 50);
 
             this.tempLabel = new Label();
             tempLabel.Text = "Temperature (F°):";
-            tempLabel.TextAlign = ContentAlignment.MiddleRight;
-            tempLabel.Location = new System.Drawing.Point(120, 608);
-            tempLabel.Size = new System.Drawing.Size(120, 50);
+            tempLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            tempLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(tempLabel);
             this.Temp = new NumericUpDown();
-            this.Temp.Location = new System.Drawing.Point(250, 618);
             this.Temp.Name = "Temperature";
+            Temp.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
             this.Temp.Maximum = 50.00M;
             this.Temp.Value = 0.00M;
-            this.Temp.Size = new System.Drawing.Size(100, 50);
+            this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
             Temp.Validating += Temp_Validating;
-            this.Controls.Add(this.Temp);
 
             this.SubmitButton = new Button();
             this.SubmitButton.Name = "Submit";
-            this.SubmitButton.Location = new System.Drawing.Point(470, 748);
-            this.SubmitButton.Size = new System.Drawing.Size(110, 40);
+            this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
+            this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeA(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
-            binSealLabel.TextAlign = ContentAlignment.MiddleRight;
-            binSealLabel.Location = new System.Drawing.Point(460, 188);
-            binSealLabel.Size = new System.Drawing.Size(200, 140);
-            this.Controls.Add(binSealLabel);
+            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binSealLabel.Size = new System.Drawing.Size(600, 300);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
-            this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
-            this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
+            BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.BinSealGrade.Size = new System.Drawing.Size(30, 30);
             BinSealGrade.Validating += BinSealGrade_Validating;
-            this.Controls.Add(this.BinSealGrade);
 
             //Firmness Control
             //
             this.firmnessLabel = new Label();
             firmnessLabel.Text = "Firmness:";
-            firmnessLabel.TextAlign = ContentAlignment.MiddleRight;
-            firmnessLabel.Location = new System.Drawing.Point(500, 393);
-            firmnessLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(firmnessLabel);
+            firmnessLabel.Size = new System.Drawing.Size(200, 50);
+            firmnessLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.FirmnessBox = new GroupBox();
             this.FirmnessBox.Name = "Firmness Box";
-            this.FirmnessBox.Location = new System.Drawing.Point(620, 378);
             this.FirmnessBox.Size = new System.Drawing.Size(220, 70);
             this.FirmnessBox.FlatStyle = FlatStyle.Standard;
             //  First Button
@@ -500,7 +507,6 @@ namespace shred_usage_writer
             this.FirmnessSoft.Location = new System.Drawing.Point(170, 25);
             this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
             this.FirmnessBox.Controls.Add(this.FirmnessSoft);
-            this.Controls.Add(this.FirmnessBox);
             //
             ////
 
@@ -509,13 +515,10 @@ namespace shred_usage_writer
             //
             this.delvicidLabel = new Label();
             delvicidLabel.Text = "Delvicid Present:";
-            delvicidLabel.TextAlign = ContentAlignment.MiddleRight;
-            delvicidLabel.Location = new System.Drawing.Point(500, 463);
-            delvicidLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(delvicidLabel);
+            delvicidLabel.Size = new System.Drawing.Size(300, 50);
+            delvicidLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.DelvicidBox = new GroupBox();
             this.DelvicidBox.Name = "Firmness Box";
-            this.DelvicidBox.Location = new System.Drawing.Point(620, 448);
             this.DelvicidBox.Size = new System.Drawing.Size(220, 70);
             this.DelvicidBox.FlatStyle = FlatStyle.Standard;
             //  First Button
@@ -541,127 +544,156 @@ namespace shred_usage_writer
             this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
             this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidFalse);
-            this.Controls.Add(this.DelvicidBox);
             //
             ////
 
             this.initialsLabel = new Label();
             initialsLabel.Text = "Initials:";
-            initialsLabel.Location = new System.Drawing.Point(580, 578);
-            initialsLabel.Size = new System.Drawing.Size(80, 30);
+            initialsLabel.Size = new System.Drawing.Size(120, 50);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Controls.Add(initialsLabel);
             this.Initials = new TextBox();
             this.Initials.Name = "Initials";
-            this.Initials.Location = new System.Drawing.Point(660, 578);
-            this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
             Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
-            this.Controls.Add(this.Initials);
+
+            // Add Controls to TableLayoutPanel
+            tableLayout.Controls.Add(dateLabel, 0, 0);
+            tableLayout.Controls.Add(Date, 1, 0);
+            tableLayout.Controls.Add(skidNumberLabel, 0, 1);
+            tableLayout.Controls.Add(ToteSkidNumber, 1, 1);
+            tableLayout.Controls.Add(piecesNumberLabel, 0, 2);
+            tableLayout.Controls.Add(NumberPieces, 1, 2);
+            tableLayout.Controls.Add(binWeightLabel, 0, 3);
+            tableLayout.Controls.Add(BinWeight, 1, 3);
+            tableLayout.Controls.Add(startTimeLabel, 0, 4);
+            tableLayout.Controls.Add(StartTime, 1, 4);
+            tableLayout.Controls.Add(tempLabel, 0, 5);
+            tableLayout.Controls.Add(Temp, 1, 5);
+            tableLayout.Controls.Add(firmnessLabel, 0, 6);
+            tableLayout.Controls.Add(FirmnessBox, 1, 6);
+            tableLayout.Controls.Add(delvicidLabel, 0, 7);
+            tableLayout.Controls.Add(DelvicidBox, 1, 7);
+            tableLayout.Controls.Add(initialsLabel, 0, 8);
+            tableLayout.Controls.Add(Initials, 1, 8);
+            tableLayout.Controls.Add(SubmitButton, 1, 10);
+            tableLayout.Controls.Add(binSealLabel, 0, 9);
+            tableLayout.Controls.Add(BinSealGrade, 1, 9);
+
+            // Add TableLayoutPanel to Form
+            this.Controls.Add(tableLayout);
         }
 
         private void InitializeBlockTypeB(string productNumber)
         {
+            tableLayout = new TableLayoutPanel();
+            tableLayout.ColumnCount = 2;
+            tableLayout.RowCount = 9;
+            tableLayout.Dock = DockStyle.None;  // Remove automatic docking
+            tableLayout.AutoSize = true;
+            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Width = this.Width / 2; // Take up about half the width
+            tableLayout.Padding = new Padding(20);
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+            }
+
             dateLabel = new Label();
             dateLabel.Text = "Lot Date:";
-            dateLabel.TextAlign = ContentAlignment.MiddleRight;
-            dateLabel.Location = new System.Drawing.Point(140, 218);
+            dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            dateLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(dateLabel);
             Date = new DateTimePicker();
-            Date.Location = new System.Drawing.Point(250, 218);
             Date.Name = "Date Picker";
             Date.CustomFormat = "MM-dd-yyyy";
+            Date.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             Date.Format = DateTimePickerFormat.Custom;
-            Date.Size = new System.Drawing.Size(140, 50);
+            Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
-            this.Controls.Add(Date);
 
             this.binWeightLabel = new Label();
-            binWeightLabel.Text = "Block Weight (lbs.):";
-            binWeightLabel.TextAlign = ContentAlignment.MiddleRight;
-            binWeightLabel.Location = new System.Drawing.Point(100, 448);
-            binWeightLabel.Size = new System.Drawing.Size(140, 50);
+            binWeightLabel.Text = "Bin Weight (lbs.):";
+            binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binWeightLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(binWeightLabel);
             this.BinWeight = new NumericUpDown();
-            this.BinWeight.Location = new System.Drawing.Point(250, 458);
-            this.BinWeight.Name = "Block Weight";
+            this.BinWeight.Name = "Bin Weight";
+            BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
             this.BinWeight.Maximum = 1200.00M;
             this.BinWeight.Value = 0.00M;
             BinWeight.Text = "";
-            this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            this.BinWeight.Size = new System.Drawing.Size(150, 50);
             BinWeight.Validating += BinWeight_Validating;
-            this.Controls.Add(this.BinWeight);
 
             this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
-            startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
-            startTimeLabel.Location = new System.Drawing.Point(150, 528);
-            startTimeLabel.Size = new System.Drawing.Size(90, 50);
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(startTimeLabel);
             this.StartTime = new DateTimePicker();
             this.StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.StartTime.Format = DateTimePickerFormat.Custom;
             this.StartTime.ShowUpDown = true;
             this.StartTime.Location = new System.Drawing.Point(250, 538);
             this.StartTime.Name = "Start Time";
-            this.StartTime.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(this.StartTime);
+            this.StartTime.Size = new System.Drawing.Size(120, 50);
 
             this.tempLabel = new Label();
             tempLabel.Text = "Temperature (F°):";
-            tempLabel.TextAlign = ContentAlignment.MiddleRight;
-            tempLabel.Location = new System.Drawing.Point(120, 608);
-            tempLabel.Size = new System.Drawing.Size(120, 50);
+            tempLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            tempLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(tempLabel);
             this.Temp = new NumericUpDown();
-            this.Temp.Location = new System.Drawing.Point(250, 618);
             this.Temp.Name = "Temperature";
+            Temp.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
             this.Temp.Maximum = 50.00M;
             this.Temp.Value = 0.00M;
+            this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
-            this.Temp.Size = new System.Drawing.Size(100, 50);
             Temp.Validating += Temp_Validating;
-            this.Controls.Add(this.Temp);
 
             this.SubmitButton = new Button();
             this.SubmitButton.Name = "Submit";
-            this.SubmitButton.Location = new System.Drawing.Point(470, 748);
-            this.SubmitButton.Size = new System.Drawing.Size(110, 40);
+            this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
+            this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeB(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
-            binSealLabel.TextAlign = ContentAlignment.MiddleRight;
-            binSealLabel.Location = new System.Drawing.Point(460, 188);
-            binSealLabel.Size = new System.Drawing.Size(200, 140);
-            this.Controls.Add(binSealLabel);
+            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binSealLabel.Size = new System.Drawing.Size(600, 300);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
-            this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
-            this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
+            BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.BinSealGrade.Size = new System.Drawing.Size(30, 30);
             BinSealGrade.Validating += BinSealGrade_Validating;
-            this.Controls.Add(this.BinSealGrade);
 
             //Firmness Control
             //
             this.firmnessLabel = new Label();
             firmnessLabel.Text = "Firmness:";
-            firmnessLabel.TextAlign = ContentAlignment.MiddleRight;
-            firmnessLabel.Location = new System.Drawing.Point(500, 393);
-            firmnessLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(firmnessLabel);
+            firmnessLabel.Size = new System.Drawing.Size(200, 50);
+            firmnessLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.FirmnessBox = new GroupBox();
             this.FirmnessBox.Name = "Firmness Box";
-            this.FirmnessBox.Location = new System.Drawing.Point(620, 378);
             this.FirmnessBox.Size = new System.Drawing.Size(220, 70);
             this.FirmnessBox.FlatStyle = FlatStyle.Standard;
             //  First Button
@@ -687,7 +719,6 @@ namespace shred_usage_writer
             this.FirmnessSoft.Location = new System.Drawing.Point(170, 25);
             this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
             this.FirmnessBox.Controls.Add(this.FirmnessSoft);
-            this.Controls.Add(this.FirmnessBox);
             //
             ////
 
@@ -696,13 +727,10 @@ namespace shred_usage_writer
             //
             this.delvicidLabel = new Label();
             delvicidLabel.Text = "Delvicid Present:";
-            delvicidLabel.TextAlign = ContentAlignment.MiddleRight;
-            delvicidLabel.Location = new System.Drawing.Point(500, 463);
-            delvicidLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(delvicidLabel);
+            delvicidLabel.Size = new System.Drawing.Size(300, 50);
+            delvicidLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.DelvicidBox = new GroupBox();
             this.DelvicidBox.Name = "Firmness Box";
-            this.DelvicidBox.Location = new System.Drawing.Point(620, 448);
             this.DelvicidBox.Size = new System.Drawing.Size(220, 70);
             this.DelvicidBox.FlatStyle = FlatStyle.Standard;
             //  First Button
@@ -728,348 +756,165 @@ namespace shred_usage_writer
             this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
             this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidFalse);
-            this.Controls.Add(this.DelvicidBox);
             //
             ////
 
             this.initialsLabel = new Label();
             initialsLabel.Text = "Initials:";
-            initialsLabel.Location = new System.Drawing.Point(580, 578);
-            initialsLabel.Size = new System.Drawing.Size(80, 30);
+            initialsLabel.Size = new System.Drawing.Size(120, 50);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Controls.Add(initialsLabel);
             this.Initials = new TextBox();
             this.Initials.Name = "Initials";
-            this.Initials.Location = new System.Drawing.Point(660, 578);
-            this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
             Initials.CharacterCasing = CharacterCasing.Upper;
-            this.Initials.Validating += Initials_Validating;
-            this.Controls.Add(this.Initials);
+            Initials.Validating += Initials_Validating;
+
+            // Add Controls to TableLayoutPanel
+            tableLayout.Controls.Add(dateLabel, 0, 0);
+            tableLayout.Controls.Add(Date, 1, 0);
+            tableLayout.Controls.Add(binWeightLabel, 0, 1);
+            tableLayout.Controls.Add(BinWeight, 1, 1);
+            tableLayout.Controls.Add(startTimeLabel, 0, 2);
+            tableLayout.Controls.Add(StartTime, 1, 2);
+            tableLayout.Controls.Add(tempLabel, 0, 3);
+            tableLayout.Controls.Add(Temp, 1, 3);
+            tableLayout.Controls.Add(firmnessLabel, 0, 4);
+            tableLayout.Controls.Add(FirmnessBox, 1, 4);
+            tableLayout.Controls.Add(delvicidLabel, 0, 5);
+            tableLayout.Controls.Add(DelvicidBox, 1, 5);
+            tableLayout.Controls.Add(initialsLabel, 0, 6);
+            tableLayout.Controls.Add(Initials, 1, 6);
+            tableLayout.Controls.Add(SubmitButton, 1, 9);
+            tableLayout.Controls.Add(binSealLabel, 0, 7);
+            tableLayout.Controls.Add(BinSealGrade, 1, 7);
+
+            this.Controls.Add(tableLayout);
         }
 
         private void InitializeBlockTypeC(string productNumber)
         {
+            tableLayout = new TableLayoutPanel();
+            tableLayout.ColumnCount = 2;
+            tableLayout.RowCount = 9;
+            tableLayout.Dock = DockStyle.None;  // Remove automatic docking
+            tableLayout.AutoSize = true;
+            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Width = this.Width / 2; // Take up about half the width
+            tableLayout.Padding = new Padding(20);
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+            }
+
             dateLabel = new Label();
             dateLabel.Text = "Lot Date:";
-            dateLabel.TextAlign = ContentAlignment.MiddleRight;
-            dateLabel.Location = new System.Drawing.Point(140, 218);
+            dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            dateLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(dateLabel);
             Date = new DateTimePicker();
-            Date.Location = new System.Drawing.Point(250, 218);
             Date.Name = "Date Picker";
             Date.CustomFormat = "MM-dd-yyyy";
+            Date.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             Date.Format = DateTimePickerFormat.Custom;
-            Date.Size = new System.Drawing.Size(140, 50);
+            Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             Date.Validating += LotDate_Validating;
-            this.Controls.Add(Date);
-
-            //Case Count Below
 
             this.piecesNumberLabel = new Label();
-            piecesNumberLabel.Text = "Number of Pieces Used:";
-            piecesNumberLabel.TextAlign = ContentAlignment.MiddleRight;
-            piecesNumberLabel.Location = new System.Drawing.Point(145, 368);
-            piecesNumberLabel.Size = new System.Drawing.Size(90, 50);
+            piecesNumberLabel.Text = "Number of Pieces:";
+            piecesNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            piecesNumberLabel.Size = new System.Drawing.Size(350, 50);
             this.Controls.Add(piecesNumberLabel);
             this.NumberPieces = new NumericUpDown();
-            this.NumberPieces.Location = new System.Drawing.Point(250, 378);
             this.NumberPieces.Name = "Number of Pieces";
+            NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.NumberPieces.Minimum = 1;
-            this.NumberPieces.Maximum = 100;
-            this.NumberPieces.Text = "";
-            this.NumberPieces.Size = new System.Drawing.Size(70, 50);
-            this.Controls.Add(this.NumberPieces);
+            this.NumberPieces.Maximum = 200;
+            this.NumberPieces.Size = new System.Drawing.Size(90, 50);
 
             this.binWeightLabel = new Label();
             binWeightLabel.Text = "Weight (lbs.):";
-            binWeightLabel.TextAlign = ContentAlignment.MiddleRight;
-            binWeightLabel.Location = new System.Drawing.Point(100, 448);
-            binWeightLabel.Size = new System.Drawing.Size(140, 50);
+            binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binWeightLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(binWeightLabel);
             this.BinWeight = new NumericUpDown();
-            this.BinWeight.Location = new System.Drawing.Point(250, 458);
             this.BinWeight.Name = "Bin Weight";
-            this.BinWeight.DecimalPlaces = 2;
-            this.BinWeight.Increment = 0.01M;
-            this.BinWeight.Minimum = 0.00M;
-            this.BinWeight.Maximum = 200.00M;
-            this.BinWeight.Value = 0.00M;
-            BinWeight.Text = "";
-            this.BinWeight.Size = new System.Drawing.Size(100, 50);
-            BinWeight.Validating += BinWeight_Validating;
-            this.Controls.Add(this.BinWeight);
-
-            this.startTimeLabel = new Label();
-            startTimeLabel.Text = "Start Time:";
-            startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
-            startTimeLabel.Location = new System.Drawing.Point(150, 528);
-            startTimeLabel.Size = new System.Drawing.Size(90, 50);
-            this.Controls.Add(startTimeLabel);
-            this.StartTime = new DateTimePicker();
-            this.StartTime.CustomFormat = "hh':'mm";
-            this.StartTime.Format = DateTimePickerFormat.Custom;
-            this.StartTime.ShowUpDown = true;
-            this.StartTime.Location = new System.Drawing.Point(250, 538);
-            this.StartTime.Name = "Start Time";
-            this.StartTime.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(this.StartTime);
-
-            this.tempLabel = new Label();
-            tempLabel.Text = "Temperature (F°):";
-            tempLabel.TextAlign = ContentAlignment.MiddleRight;
-            tempLabel.Location = new System.Drawing.Point(120, 608);
-            tempLabel.Size = new System.Drawing.Size(120, 50);
-            this.Controls.Add(tempLabel);
-            this.Temp = new NumericUpDown();
-            this.Temp.Location = new System.Drawing.Point(250, 618);
-            this.Temp.Name = "Temperature";
-            this.Temp.DecimalPlaces = 2;
-            this.Temp.Increment = 0.1M;
-            this.Temp.Minimum = 0.00M;
-            this.Temp.Maximum = 50.00M;
-            this.Temp.Value = 0.00M;
-            Temp.Text = "";
-            this.Temp.Size = new System.Drawing.Size(100, 50);
-            this.Temp.Validating += Temp_Validating;
-            this.Controls.Add(this.Temp);
-
-            this.SubmitButton = new Button();
-            this.SubmitButton.Name = "Submit";
-            this.SubmitButton.Location = new System.Drawing.Point(470, 748);
-            this.SubmitButton.Size = new System.Drawing.Size(110, 40);
-            this.SubmitButton.Text = "SUBMIT";
-            this.Controls.Add(this.SubmitButton);
-            this.SubmitButton.Click +=
-                delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeC(sender, e, productNumber); };
-
-            this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
-            binSealLabel.TextAlign = ContentAlignment.MiddleRight;
-            binSealLabel.Location = new System.Drawing.Point(460, 188);
-            binSealLabel.Size = new System.Drawing.Size(200, 140);
-            this.Controls.Add(binSealLabel);
-            this.BinSealGrade = new CheckBox();
-            this.BinSealGrade.Name = "Bin Seal Grade";
-            this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
-            this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
-            BinSealGrade.Validating += BinSealGrade_Validating;
-            this.Controls.Add(this.BinSealGrade);
-
-            //Firmness Control
-            //
-            this.firmnessLabel = new Label();
-            firmnessLabel.Text = "Firmness:";
-            firmnessLabel.TextAlign = ContentAlignment.MiddleRight;
-            firmnessLabel.Location = new System.Drawing.Point(500, 393);
-            firmnessLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(firmnessLabel);
-            this.FirmnessBox = new GroupBox();
-            this.FirmnessBox.Name = "Firmness Box";
-            this.FirmnessBox.Location = new System.Drawing.Point(620, 378);
-            this.FirmnessBox.Size = new System.Drawing.Size(220, 70);
-            this.FirmnessBox.FlatStyle = FlatStyle.Standard;
-            //  First Button
-            Label firmLabel = new Label();
-            firmLabel.Text = "Firm";
-            firmLabel.Location = new System.Drawing.Point(20, 25);
-            firmLabel.Size = new System.Drawing.Size(60, 30);
-            this.FirmnessBox.Controls.Add(firmLabel);
-            this.FirmnessFirm = new RadioButton();
-            this.FirmnessFirm.Name = "Firmness Firm";
-            this.FirmnessFirm.Location = new System.Drawing.Point(80, 25);
-            this.FirmnessFirm.Size = new System.Drawing.Size(30, 30);
-            this.FirmnessBox.Controls.Add(this.FirmnessFirm);
-            this.FirmnessFirm.Checked = true;
-            //  Second Button
-            Label softLabel = new Label();
-            softLabel.Text = "Soft";
-            softLabel.Location = new System.Drawing.Point(110, 25);
-            softLabel.Size = new System.Drawing.Size(60, 30);
-            this.FirmnessBox.Controls.Add(softLabel);
-            this.FirmnessSoft = new RadioButton();
-            this.FirmnessSoft.Name = "Firmness Soft";
-            this.FirmnessSoft.Location = new System.Drawing.Point(170, 25);
-            this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
-            this.FirmnessBox.Controls.Add(this.FirmnessSoft);
-            this.Controls.Add(this.FirmnessBox);
-            //
-            ////
-
-
-            //Delvicid Control
-            //
-            this.delvicidLabel = new Label();
-            delvicidLabel.Text = "Delvicid Present:";
-            delvicidLabel.TextAlign = ContentAlignment.MiddleRight;
-            delvicidLabel.Location = new System.Drawing.Point(500, 463);
-            delvicidLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(delvicidLabel);
-            this.DelvicidBox = new GroupBox();
-            this.DelvicidBox.Name = "Firmness Box";
-            this.DelvicidBox.Location = new System.Drawing.Point(620, 448);
-            this.DelvicidBox.Size = new System.Drawing.Size(220, 70);
-            this.DelvicidBox.FlatStyle = FlatStyle.Standard;
-            //  First Button
-            Label trueDelvicidLabel = new Label();
-            trueDelvicidLabel.Text = "Yes";
-            trueDelvicidLabel.Location = new System.Drawing.Point(20, 25);
-            trueDelvicidLabel.Size = new System.Drawing.Size(40, 30);
-            this.DelvicidBox.Controls.Add(trueDelvicidLabel);
-            this.DelvicidTrue = new RadioButton();
-            this.DelvicidTrue.Name = "Delvicid True";
-            this.DelvicidTrue.Location = new System.Drawing.Point(80, 25);
-            this.DelvicidTrue.Size = new System.Drawing.Size(40, 30);
-            this.DelvicidBox.Controls.Add(this.DelvicidTrue);
-            this.DelvicidTrue.Checked = true;
-            //  Second Button
-            Label falseDelvicidLabel = new Label();
-            falseDelvicidLabel.Text = "No";
-            falseDelvicidLabel.Location = new System.Drawing.Point(120, 25);
-            falseDelvicidLabel.Size = new System.Drawing.Size(40, 30);
-            this.DelvicidBox.Controls.Add(falseDelvicidLabel);
-            this.DelvicidFalse = new RadioButton();
-            this.DelvicidFalse.Name = "Delvicid False";
-            this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
-            this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
-            this.DelvicidBox.Controls.Add(this.DelvicidFalse);
-            this.Controls.Add(this.DelvicidBox);
-            //
-            ////
-
-            this.initialsLabel = new Label();
-            initialsLabel.Text = "Initials:";
-            initialsLabel.Location = new System.Drawing.Point(580, 578);
-            initialsLabel.Size = new System.Drawing.Size(80, 30);
-            this.Controls.Add(initialsLabel);
-            this.Initials = new TextBox();
-            this.Initials.Name = "Initials";
-            this.Initials.Location = new System.Drawing.Point(660, 578);
-            this.Initials.Size = new System.Drawing.Size(40, 30);
-            Initials.CharacterCasing = CharacterCasing.Upper;
-            Initials.Validating += Initials_Validating;
-            this.Controls.Add(this.Initials);
-        }
-
-        private void InitializeScrap()
-        {
-            this.dateLabel = new Label();
-            dateLabel.Text = "Lot Date:";
-            dateLabel.TextAlign = ContentAlignment.MiddleRight;
-            dateLabel.Location = new System.Drawing.Point(140, 218);
-            this.Controls.Add(dateLabel);
-            this.Date = new DateTimePicker();
-            this.Date.Location = new System.Drawing.Point(250, 218);
-            this.Date.Name = "Date Picker";
-            this.Date.CustomFormat = "MM-dd-yyyy";
-            this.Date.Format = DateTimePickerFormat.Custom;
-            this.Date.Size = new System.Drawing.Size(140, 50);
-            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            Date.Validating += LotDate_Validating;
-            this.Controls.Add(this.Date);
-
-            this.skidNumberLabel = new Label();
-            skidNumberLabel.Text = "Skid/Tote Number:";
-            skidNumberLabel.TextAlign = ContentAlignment.MiddleRight;
-            skidNumberLabel.Location = new System.Drawing.Point(100, 288);
-            skidNumberLabel.Size = new System.Drawing.Size(140, 50);
-            this.Controls.Add(skidNumberLabel);
-            this.ToteSkidNumber = new NumericUpDown();
-            this.ToteSkidNumber.Location = new System.Drawing.Point(250, 298);
-            this.ToteSkidNumber.Name = "Skid Number";
-            this.ToteSkidNumber.Size = new System.Drawing.Size(70, 50);
-            ToteSkidNumber.Text = "";
-            ToteSkidNumber.Validating += ToteSkidNumber_Validating;
-            this.Controls.Add(this.ToteSkidNumber);
-
-            this.binWeightLabel = new Label();
-            binWeightLabel.Text = "Bin Weight (lbs.):";
-            binWeightLabel.TextAlign = ContentAlignment.MiddleRight;
-            binWeightLabel.Location = new System.Drawing.Point(100, 448);
-            binWeightLabel.Size = new System.Drawing.Size(140, 50);
-            this.Controls.Add(binWeightLabel);
-            this.BinWeight = new NumericUpDown();
-            this.BinWeight.Location = new System.Drawing.Point(250, 458);
-            this.BinWeight.Name = "Bin Weight";
+            BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
             this.BinWeight.Maximum = 1200.00M;
             this.BinWeight.Value = 0.00M;
             BinWeight.Text = "";
-            this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            this.BinWeight.Size = new System.Drawing.Size(150, 50);
             BinWeight.Validating += BinWeight_Validating;
-            this.Controls.Add(this.BinWeight);
 
             this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
-            startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
-            startTimeLabel.Location = new System.Drawing.Point(150, 528);
-            startTimeLabel.Size = new System.Drawing.Size(90, 50);
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(startTimeLabel);
             this.StartTime = new DateTimePicker();
             this.StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.StartTime.Format = DateTimePickerFormat.Custom;
             this.StartTime.ShowUpDown = true;
             this.StartTime.Location = new System.Drawing.Point(250, 538);
             this.StartTime.Name = "Start Time";
-            this.StartTime.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(this.StartTime);
+            this.StartTime.Size = new System.Drawing.Size(120, 50);
 
             this.tempLabel = new Label();
             tempLabel.Text = "Temperature (F°):";
-            tempLabel.TextAlign = ContentAlignment.MiddleRight;
-            tempLabel.Location = new System.Drawing.Point(120, 608);
-            tempLabel.Size = new System.Drawing.Size(120, 50);
+            tempLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            tempLabel.Size = new System.Drawing.Size(250, 50);
             this.Controls.Add(tempLabel);
             this.Temp = new NumericUpDown();
-            this.Temp.Location = new System.Drawing.Point(250, 618);
             this.Temp.Name = "Temperature";
+            Temp.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
             this.Temp.Maximum = 50.00M;
             this.Temp.Value = 0.00M;
+            this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
-            this.Temp.Size = new System.Drawing.Size(100, 50);
             Temp.Validating += Temp_Validating;
-            this.Controls.Add(this.Temp);
 
             this.SubmitButton = new Button();
             this.SubmitButton.Name = "Submit";
-            this.SubmitButton.Location = new System.Drawing.Point(470, 748);
-            this.SubmitButton.Size = new System.Drawing.Size(110, 40);
+            this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
+            this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
-                delegate (object sender, EventArgs e) { SubmitButton_ClickedScrap(sender, e); };
+                delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeC(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "       Bin Seal:                           (By checking this box you confirm that the bin is sealed adequately)";
-            binSealLabel.TextAlign = ContentAlignment.MiddleRight;
-            binSealLabel.Location = new System.Drawing.Point(460, 188);
-            binSealLabel.Size = new System.Drawing.Size(200, 140);
-            this.Controls.Add(binSealLabel);
+            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binSealLabel.Size = new System.Drawing.Size(600, 300);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
-            this.BinSealGrade.Location = new System.Drawing.Point(700, 228);
-            this.BinSealGrade.Size = new System.Drawing.Size(20, 20);
+            BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.BinSealGrade.Size = new System.Drawing.Size(30, 30);
             BinSealGrade.Validating += BinSealGrade_Validating;
-            this.Controls.Add(this.BinSealGrade);
 
             //Firmness Control
             //
             this.firmnessLabel = new Label();
             firmnessLabel.Text = "Firmness:";
-            firmnessLabel.TextAlign = ContentAlignment.MiddleRight;
-            firmnessLabel.Location = new System.Drawing.Point(500, 393);
-            firmnessLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(firmnessLabel);
+            firmnessLabel.Size = new System.Drawing.Size(200, 50);
+            firmnessLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.FirmnessBox = new GroupBox();
             this.FirmnessBox.Name = "Firmness Box";
-            this.FirmnessBox.Location = new System.Drawing.Point(620, 378);
             this.FirmnessBox.Size = new System.Drawing.Size(220, 70);
             this.FirmnessBox.FlatStyle = FlatStyle.Standard;
-
             //  First Button
             Label firmLabel = new Label();
             firmLabel.Text = "Firm";
@@ -1082,7 +927,6 @@ namespace shred_usage_writer
             this.FirmnessFirm.Size = new System.Drawing.Size(30, 30);
             this.FirmnessBox.Controls.Add(this.FirmnessFirm);
             this.FirmnessFirm.Checked = true;
-
             //  Second Button
             Label softLabel = new Label();
             softLabel.Text = "Soft";
@@ -1094,26 +938,20 @@ namespace shred_usage_writer
             this.FirmnessSoft.Location = new System.Drawing.Point(170, 25);
             this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
             this.FirmnessBox.Controls.Add(this.FirmnessSoft);
-            this.Controls.Add(this.FirmnessBox);
             //
             ////
 
 
             //Delvicid Control
             //
-            //
             this.delvicidLabel = new Label();
             delvicidLabel.Text = "Delvicid Present:";
-            delvicidLabel.TextAlign = ContentAlignment.MiddleRight;
-            delvicidLabel.Location = new System.Drawing.Point(500, 463);
-            delvicidLabel.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(delvicidLabel);
+            delvicidLabel.Size = new System.Drawing.Size(300, 50);
+            delvicidLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.DelvicidBox = new GroupBox();
             this.DelvicidBox.Name = "Firmness Box";
-            this.DelvicidBox.Location = new System.Drawing.Point(620, 448);
             this.DelvicidBox.Size = new System.Drawing.Size(220, 70);
             this.DelvicidBox.FlatStyle = FlatStyle.Standard;
-
             //  First Button
             Label trueDelvicidLabel = new Label();
             trueDelvicidLabel.Text = "Yes";
@@ -1126,7 +964,6 @@ namespace shred_usage_writer
             this.DelvicidTrue.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidTrue);
             this.DelvicidTrue.Checked = true;
-
             //  Second Button
             Label falseDelvicidLabel = new Label();
             falseDelvicidLabel.Text = "No";
@@ -1138,94 +975,365 @@ namespace shred_usage_writer
             this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
             this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
             this.DelvicidBox.Controls.Add(this.DelvicidFalse);
-            this.Controls.Add(this.DelvicidBox);
             //
             ////
 
             this.initialsLabel = new Label();
             initialsLabel.Text = "Initials:";
-            initialsLabel.Location = new System.Drawing.Point(580, 578);
-            initialsLabel.Size = new System.Drawing.Size(80, 30);
+            initialsLabel.Size = new System.Drawing.Size(120, 50);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Controls.Add(initialsLabel);
             this.Initials = new TextBox();
             this.Initials.Name = "Initials";
-            this.Initials.Location = new System.Drawing.Point(660, 578);
-            this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
             Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
-            this.Controls.Add(this.Initials);
+
+            // Add Controls to TableLayoutPanel
+            tableLayout.Controls.Add(dateLabel, 0, 0);
+            tableLayout.Controls.Add(Date, 1, 0);
+            tableLayout.Controls.Add(piecesNumberLabel, 0, 1);
+            tableLayout.Controls.Add(NumberPieces, 1, 1);
+            tableLayout.Controls.Add(binWeightLabel, 0, 2);
+            tableLayout.Controls.Add(BinWeight, 1, 2);
+            tableLayout.Controls.Add(startTimeLabel, 0, 3);
+            tableLayout.Controls.Add(StartTime, 1, 3);
+            tableLayout.Controls.Add(tempLabel, 0, 4);
+            tableLayout.Controls.Add(Temp, 1, 4);
+            tableLayout.Controls.Add(firmnessLabel, 0, 5);
+            tableLayout.Controls.Add(FirmnessBox, 1, 5);
+            tableLayout.Controls.Add(delvicidLabel, 0, 6);
+            tableLayout.Controls.Add(DelvicidBox, 1, 6);
+            tableLayout.Controls.Add(initialsLabel, 0, 7);
+            tableLayout.Controls.Add(Initials, 1, 7);
+            tableLayout.Controls.Add(SubmitButton, 1, 9);
+            tableLayout.Controls.Add(binSealLabel, 0, 8);
+            tableLayout.Controls.Add(BinSealGrade, 1, 8);
+
+            this.Controls.Add(tableLayout);
+        }
+
+        private void InitializeScrap()
+        {
+            tableLayout = new TableLayoutPanel();
+            tableLayout.ColumnCount = 2;
+            tableLayout.RowCount = 9;
+            tableLayout.Dock = DockStyle.None;  // Remove automatic docking
+            tableLayout.AutoSize = true;
+            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Width = this.Width / 2; // Take up about half the width
+            tableLayout.Padding = new Padding(20);
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+            }
+
+
+            dateLabel = new Label();
+            dateLabel.Text = "Lot Date:";
+            dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            dateLabel.Size = new System.Drawing.Size(200, 50);
+            this.Controls.Add(dateLabel);
+            Date = new DateTimePicker();
+            Date.Name = "Date Picker";
+            Date.CustomFormat = "MM-dd-yyyy";
+            Date.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            Date.Format = DateTimePickerFormat.Custom;
+            Date.Size = new System.Drawing.Size(220, 50);
+            Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
+            Date.Validating += LotDate_Validating;
+
+            skidNumberLabel = new Label();
+            skidNumberLabel.Text = "Skid/Tote Number:";
+            skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            skidNumberLabel.Size = new System.Drawing.Size(350, 50);
+            this.Controls.Add(skidNumberLabel);
+            ToteSkidNumber = new NumericUpDown();
+            ToteSkidNumber.Name = "Skid Number";
+            ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
+            ToteSkidNumber.Maximum = 199;
+            ToteSkidNumber.Minimum = 0;
+            ToteSkidNumber.Value = 0;
+            ToteSkidNumber.Text = "";
+            ToteSkidNumber.Validating += ToteSkidNumber_Validating;
+
+            this.binWeightLabel = new Label();
+            binWeightLabel.Text = "Bin Weight (lbs.):";
+            binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binWeightLabel.Size = new System.Drawing.Size(250, 50);
+            this.Controls.Add(binWeightLabel);
+            this.BinWeight = new NumericUpDown();
+            this.BinWeight.Name = "Bin Weight";
+            BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.BinWeight.DecimalPlaces = 2;
+            this.BinWeight.Increment = 0.01M;
+            this.BinWeight.Minimum = 0.00M;
+            this.BinWeight.Maximum = 1200.00M;
+            this.BinWeight.Value = 0.00M;
+            BinWeight.Text = "";
+            this.BinWeight.Size = new System.Drawing.Size(150, 50);
+            BinWeight.Validating += BinWeight_Validating;
+
+            this.startTimeLabel = new Label();
+            startTimeLabel.Text = "Start Time:";
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
+            this.Controls.Add(startTimeLabel);
+            this.StartTime = new DateTimePicker();
+            this.StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.StartTime.Format = DateTimePickerFormat.Custom;
+            this.StartTime.ShowUpDown = true;
+            this.StartTime.Location = new System.Drawing.Point(250, 538);
+            this.StartTime.Name = "Start Time";
+            this.StartTime.Size = new System.Drawing.Size(120, 50);
+
+            this.tempLabel = new Label();
+            tempLabel.Text = "Temperature (F°):";
+            tempLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            tempLabel.Size = new System.Drawing.Size(250, 50);
+            this.Controls.Add(tempLabel);
+            this.Temp = new NumericUpDown();
+            this.Temp.Name = "Temperature";
+            Temp.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Temp.DecimalPlaces = 2;
+            this.Temp.Increment = 0.1M;
+            this.Temp.Minimum = 0.00M;
+            this.Temp.Maximum = 50.00M;
+            this.Temp.Value = 0.00M;
+            this.Temp.Size = new System.Drawing.Size(90, 50);
+            Temp.Text = "";
+            Temp.Validating += Temp_Validating;
+
+            this.SubmitButton = new Button();
+            this.SubmitButton.Name = "Submit";
+            this.SubmitButton.Size = new System.Drawing.Size(180, 80);
+            this.SubmitButton.Text = "SUBMIT";
+            this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
+            this.Controls.Add(this.SubmitButton);
+            this.SubmitButton.Click +=
+                delegate (object sender, EventArgs e) { SubmitButton_ClickedScrap(sender, e); };
+
+            this.binSealLabel = new Label();
+            binSealLabel.Text = "       Bin Seal:                                               (By checking this box you confirm that the bin is sealed adequately)";
+            binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            binSealLabel.Size = new System.Drawing.Size(600, 300);
+            this.BinSealGrade = new CheckBox();
+            this.BinSealGrade.Name = "Bin Seal Grade";
+            BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.BinSealGrade.Size = new System.Drawing.Size(30, 30);
+            BinSealGrade.Validating += BinSealGrade_Validating;
+
+            //Firmness Control
+            //
+            this.firmnessLabel = new Label();
+            firmnessLabel.Text = "Firmness:";
+            firmnessLabel.Size = new System.Drawing.Size(200, 50);
+            firmnessLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.FirmnessBox = new GroupBox();
+            this.FirmnessBox.Name = "Firmness Box";
+            this.FirmnessBox.Size = new System.Drawing.Size(220, 70);
+            this.FirmnessBox.FlatStyle = FlatStyle.Standard;
+            //  First Button
+            Label firmLabel = new Label();
+            firmLabel.Text = "Firm";
+            firmLabel.Location = new System.Drawing.Point(20, 25);
+            firmLabel.Size = new System.Drawing.Size(60, 30);
+            this.FirmnessBox.Controls.Add(firmLabel);
+            this.FirmnessFirm = new RadioButton();
+            this.FirmnessFirm.Name = "Firmness Firm";
+            this.FirmnessFirm.Location = new System.Drawing.Point(80, 25);
+            this.FirmnessFirm.Size = new System.Drawing.Size(30, 30);
+            this.FirmnessBox.Controls.Add(this.FirmnessFirm);
+            this.FirmnessFirm.Checked = true;
+            //  Second Button
+            Label softLabel = new Label();
+            softLabel.Text = "Soft";
+            softLabel.Location = new System.Drawing.Point(110, 25);
+            softLabel.Size = new System.Drawing.Size(60, 30);
+            this.FirmnessBox.Controls.Add(softLabel);
+            this.FirmnessSoft = new RadioButton();
+            this.FirmnessSoft.Name = "Firmness Soft";
+            this.FirmnessSoft.Location = new System.Drawing.Point(170, 25);
+            this.FirmnessSoft.Size = new System.Drawing.Size(30, 30);
+            this.FirmnessBox.Controls.Add(this.FirmnessSoft);
+            //
+            ////
+
+
+            //Delvicid Control
+            //
+            this.delvicidLabel = new Label();
+            delvicidLabel.Text = "Delvicid Present:";
+            delvicidLabel.Size = new System.Drawing.Size(300, 50);
+            delvicidLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.DelvicidBox = new GroupBox();
+            this.DelvicidBox.Name = "Firmness Box";
+            this.DelvicidBox.Size = new System.Drawing.Size(220, 70);
+            this.DelvicidBox.FlatStyle = FlatStyle.Standard;
+            //  First Button
+            Label trueDelvicidLabel = new Label();
+            trueDelvicidLabel.Text = "Yes";
+            trueDelvicidLabel.Location = new System.Drawing.Point(20, 25);
+            trueDelvicidLabel.Size = new System.Drawing.Size(40, 30);
+            this.DelvicidBox.Controls.Add(trueDelvicidLabel);
+            this.DelvicidTrue = new RadioButton();
+            this.DelvicidTrue.Name = "Delvicid True";
+            this.DelvicidTrue.Location = new System.Drawing.Point(80, 25);
+            this.DelvicidTrue.Size = new System.Drawing.Size(40, 30);
+            this.DelvicidBox.Controls.Add(this.DelvicidTrue);
+            this.DelvicidTrue.Checked = true;
+            //  Second Button
+            Label falseDelvicidLabel = new Label();
+            falseDelvicidLabel.Text = "No";
+            falseDelvicidLabel.Location = new System.Drawing.Point(120, 25);
+            falseDelvicidLabel.Size = new System.Drawing.Size(40, 30);
+            this.DelvicidBox.Controls.Add(falseDelvicidLabel);
+            this.DelvicidFalse = new RadioButton();
+            this.DelvicidFalse.Name = "Delvicid False";
+            this.DelvicidFalse.Location = new System.Drawing.Point(170, 25);
+            this.DelvicidFalse.Size = new System.Drawing.Size(40, 30);
+            this.DelvicidBox.Controls.Add(this.DelvicidFalse);
+            //
+            ////
+
+            this.initialsLabel = new Label();
+            initialsLabel.Text = "Initials:";
+            initialsLabel.Size = new System.Drawing.Size(120, 50);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Controls.Add(initialsLabel);
+            this.Initials = new TextBox();
+            this.Initials.Name = "Initials";
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
+            Initials.CharacterCasing = CharacterCasing.Upper;
+            Initials.Validating += Initials_Validating;
+
+            // Add Controls to TableLayoutPanel
+            tableLayout.Controls.Add(dateLabel, 0, 0);
+            tableLayout.Controls.Add(Date, 1, 0);
+            tableLayout.Controls.Add(skidNumberLabel, 0, 1);
+            tableLayout.Controls.Add(ToteSkidNumber, 1, 1);
+            tableLayout.Controls.Add(binWeightLabel, 0, 2);
+            tableLayout.Controls.Add(BinWeight, 1, 2);
+            tableLayout.Controls.Add(startTimeLabel, 0, 3);
+            tableLayout.Controls.Add(StartTime, 1, 3);
+            tableLayout.Controls.Add(tempLabel, 0, 4);
+            tableLayout.Controls.Add(Temp, 1, 4);
+            tableLayout.Controls.Add(firmnessLabel, 0, 5);
+            tableLayout.Controls.Add(FirmnessBox, 1, 5);
+            tableLayout.Controls.Add(delvicidLabel, 0, 6);
+            tableLayout.Controls.Add(DelvicidBox, 1, 6);
+            tableLayout.Controls.Add(initialsLabel, 0, 7);
+            tableLayout.Controls.Add(Initials, 1, 7);
+            tableLayout.Controls.Add(SubmitButton, 1, 9);
+            tableLayout.Controls.Add(binSealLabel, 0, 8);
+            tableLayout.Controls.Add(BinSealGrade, 1, 8);
+
+            // Add TableLayoutPanel to Form
+            this.Controls.Add(tableLayout);
         }
 
         private void InitializePowder()
         {
+            tableLayout = new TableLayoutPanel();
+            tableLayout.ColumnCount = 2;
+            tableLayout.RowCount = 9;
+            tableLayout.Dock = DockStyle.None;  // Remove automatic docking
+            tableLayout.AutoSize = true;
+            tableLayout.Location = new System.Drawing.Point(300, 200); // Move it right (X=50) and down (Y=20)
+            tableLayout.Width = this.Width / 2; // Take up about half the width
+            tableLayout.Padding = new Padding(20);
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F)); // Labels
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Controls
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F)); // Adds space between rows
+            }
+
             this.bagCountLabel = new Label();
             bagCountLabel.Text = "Bag Count:";
-            bagCountLabel.TextAlign = ContentAlignment.MiddleRight;
-            bagCountLabel.Location = new System.Drawing.Point(100, 288);
-            bagCountLabel.Size = new System.Drawing.Size(140, 50);
-            this.Controls.Add(bagCountLabel);
+            bagCountLabel.Size = new System.Drawing.Size(200, 50);
+            bagCountLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.BagCount = new NumericUpDown();
-            BagCount.Location = new System.Drawing.Point(250, 298);
             BagCount.Name = "Bag Count";
             BagCount.Size = new System.Drawing.Size(70, 50);
+            BagCount.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             BagCount.Maximum = 10;
             BagCount.Minimum = 0;
             BagCount.Increment = 1;
             BagCount.Value = 0;
             BagCount.Text = "";
             BagCount.Validating += BagCount_Validating;
-            this.Controls.Add(this.BagCount);
 
             this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
-            startTimeLabel.TextAlign = ContentAlignment.MiddleRight;
-            startTimeLabel.Location = new System.Drawing.Point(150, 378);
-            startTimeLabel.Size = new System.Drawing.Size(90, 50);
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
             this.Controls.Add(startTimeLabel);
             this.StartTime = new DateTimePicker();
             this.StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.StartTime.Format = DateTimePickerFormat.Custom;
             this.StartTime.ShowUpDown = true;
-            this.StartTime.Location = new System.Drawing.Point(250, 388);
+            this.StartTime.Location = new System.Drawing.Point(250, 538);
             this.StartTime.Name = "Start Time";
-            this.StartTime.Size = new System.Drawing.Size(100, 50);
-            this.Controls.Add(this.StartTime);
+            this.StartTime.Size = new System.Drawing.Size(120, 50);
 
             this.initialsLabel = new Label();
             initialsLabel.Text = "Initials:";
-            initialsLabel.Location = new System.Drawing.Point(580, 478);
-            initialsLabel.Size = new System.Drawing.Size(80, 30);
-            initialsLabel.TextAlign = ContentAlignment.MiddleRight;
+            initialsLabel.Size = new System.Drawing.Size(120, 50);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Controls.Add(initialsLabel);
             this.Initials = new TextBox();
             this.Initials.Name = "Initials";
-            this.Initials.Location = new System.Drawing.Point(670, 478);
-            this.Initials.Size = new System.Drawing.Size(40, 30);
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
             Initials.CharacterCasing = CharacterCasing.Upper;
             Initials.Validating += Initials_Validating;
-            this.Controls.Add(this.Initials);
 
             this.powderLotNumberLabel = new Label();
             powderLotNumberLabel.Text = "Lot Number:";
-            powderLotNumberLabel.Location = new System.Drawing.Point(460, 388);
-            powderLotNumberLabel.Size = new System.Drawing.Size(90, 60);
-            powderLotNumberLabel.TextAlign = ContentAlignment.TopRight;
-            this.Controls.Add(powderLotNumberLabel);
+            powderLotNumberLabel.Size = new System.Drawing.Size(200, 60);
+            powderLotNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.PowderLotNumber = new TextBox();
             PowderLotNumber.Name = "Powder Lot Number";
-            PowderLotNumber.Location = new System.Drawing.Point(560, 393);
-            PowderLotNumber.Size = new System.Drawing.Size(90, 30);
+            PowderLotNumber.Size = new System.Drawing.Size(200, 30);
+            PowderLotNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            PowderLotNumber.CharacterCasing = CharacterCasing.Upper;
             PowderLotNumber.Validating += PowderLotNumber_Validating;
-            this.Controls.Add(PowderLotNumber);
 
             this.SubmitButton = new Button();
             this.SubmitButton.Name = "Submit";
-            this.SubmitButton.Location = new System.Drawing.Point(470, 648);
-            this.SubmitButton.Size = new System.Drawing.Size(110, 40);
+            this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
+            this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedPowder(sender, e); };
+
+            // Add Controls to TableLayoutPanel
+            tableLayout.Controls.Add(bagCountLabel, 0, 0);
+            tableLayout.Controls.Add(BagCount, 1, 0);
+            tableLayout.Controls.Add(startTimeLabel, 0, 1);
+            tableLayout.Controls.Add(StartTime, 1, 1);
+            tableLayout.Controls.Add(initialsLabel, 0, 2);
+            tableLayout.Controls.Add(Initials, 1, 2);
+            tableLayout.Controls.Add(powderLotNumberLabel, 0, 3);
+            tableLayout.Controls.Add(PowderLotNumber, 1, 3);
+            tableLayout.Controls.Add(SubmitButton, 0, 4);
+
+
+            // Add TableLayoutPanel to Form
+            this.Controls.Add(tableLayout);
         }
 
 
@@ -1349,7 +1457,7 @@ namespace shred_usage_writer
             }
 
             string i = "";
-            if(ComboBox1.Text.ToString()== "008-000005 PS Purchased" || ComboBox1.Text.ToString()== "008-000021 WM Purchased")
+            if(ComboBox1.Text.ToString()== "008-000005 PS Purchased" || ComboBox1.Text.ToString()== "008-000021 WM Purchased" || ComboBox1.Text.ToString() == "002-000035 Scrap")
             {
                 string itemText = TrimItemNumber(ComboBox1.Text.ToString());
                 i = itemText + "    Tote/Bin #: " + ToteSkidNumber.Value.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
@@ -1633,7 +1741,7 @@ namespace shred_usage_writer
                 }
             }
 
-            string i = ComboBox1.Text.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Weight: " + BinWeight.Value.ToString() + "lbs.    Time: " + StartTime.Value.ToShortTimeString()
+            string i = "Scrap" + "    Lot: " + Date.Value.ToShortDateString() + "    Weight: " + BinWeight.Value.ToString() + "lbs.    Time: " + StartTime.Value.ToShortTimeString()
                     + "    ID: " + Initials.Text.ToString();
             UpdateList(i);
 
