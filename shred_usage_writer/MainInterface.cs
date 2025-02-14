@@ -69,12 +69,20 @@ namespace shred_usage_writer
 
             if (!File.Exists(filePath))
             {
-                Trace.WriteLine(ogWorkbook);
                 File.Copy(ogWorkbook, filePath);
             }
 
             // Load the new workbook
             this.wb = new XLWorkbook(filePath);
+
+            using (var workbook = new XLWorkbook(filePath))
+            {
+                foreach (var sheet in workbook.Worksheets)
+                {
+                    Trace.WriteLine(sheet.Name);
+                }
+            }
+
 
 
             InitializeComponent();
@@ -91,12 +99,12 @@ namespace shred_usage_writer
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "blank.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK1.xlsx");
 
             // Prevent unnecessary extraction if the file already exists
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.blank.xlsx"; // Adjust with your namespace
+                string resourceName = "shred_usage_writer.Resources.BLANK1.xlsx"; // Adjust with your namespace
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -190,7 +198,7 @@ namespace shred_usage_writer
             ComboBox1.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.ComboBox1.TabIndex = 0;
             this.ComboBox1.Text = "Select Block Item";
-            string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000508",
+            string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000705",
             "001-000525", "001-000528", "008-000005 PS Purchased", "008-000021 WM Purchased", "008-000001 Asiago", "008-000002 Cheddar", "008-000006 Parmesan",
             "008-000010 White Ched", "008-000022 Meunster", "008-000007 Provolone", "002-000035 Scrap", "Powder"};
             ComboBox1.Items.AddRange(installs);
@@ -290,10 +298,10 @@ namespace shred_usage_writer
                     this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000470      ";
                     InitializeBlockTypeA("1-470");
                     break;
-                case "001-000508":
+                case "001-000705":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000508      ";
-                    InitializeBlockTypeA("1-508");
+                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000705      ";
+                    InitializeBlockTypeA("1-705");
                     break;
                 case "001-000525":
                     NewSelection();
