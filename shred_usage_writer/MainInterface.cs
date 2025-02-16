@@ -95,6 +95,7 @@ namespace shred_usage_writer
             //this.Height = Screen.PrimaryScreen.WorkingArea.Height;
             this.WindowState = FormWindowState.Maximized; // Maximizes the window
             this.FormBorderStyle = FormBorderStyle.None;  // Hides the title bar
+            errorProvider = new ErrorProvider();
         }
 
         private string ExtractBlankExcelTemplate()
@@ -206,7 +207,7 @@ namespace shred_usage_writer
             this.Controls.Add(this.ComboBox1);
 
             comboBoxLabel = new Label();
-            comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2)-220, 90);
+            comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2) - 220, 90);
             comboBoxLabel.Size = new System.Drawing.Size(220, 50);
             comboBoxLabel.Name = "comboBoxLabel";
             comboBoxLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
@@ -372,33 +373,6 @@ namespace shred_usage_writer
 
         private void NewSelection()
         {
-            this.Controls.Remove(ToteSkidNumber);
-            if (ToteSkidNumber != null) { ToteSkidNumber.Dispose(); }
-            this.Controls.Remove(BinWeight);
-            if (BinWeight != null) { BinWeight.Dispose(); }
-            this.Controls.Remove(Temp);
-            if (Temp != null) { Temp.Dispose(); }
-            this.Controls.Remove(DelvicidBox);
-            if (DelvicidBox != null) { DelvicidBox.Dispose(); }
-            this.Controls.Remove(FirmnessBox);
-            if (FirmnessBox != null) { FirmnessBox.Dispose(); }
-            this.Controls.Remove(firmnessLabel);
-            this.Controls.Remove(delvicidLabel);
-            this.Controls.Remove(Date);
-            if (Date != null) { Date.Dispose(); }
-            this.Controls.Remove(NumberPieces);
-            if (NumberPieces != null) { NumberPieces.Dispose(); }
-            this.Controls.Remove(StartTime);
-            if (StartTime != null) { StartTime.Dispose(); }
-            this.Controls.Remove(tempLabel);
-            this.Controls.Remove(dateLabel);
-            this.Controls.Remove(skidNumberLabel);
-            this.Controls.Remove(piecesNumberLabel);
-            this.Controls.Remove(binWeightLabel);
-            this.Controls.Remove(startTimeLabel);
-            this.Controls.Remove(binSealLabel);
-            this.Controls.Remove(BinSealGrade);
-            if (BinSealGrade != null) { BinSealGrade.Dispose(); }
             this.Controls.Remove(SubmitButton);
             this.Controls.Remove(initialsLabel);
             this.Controls.Remove(Initials);
@@ -410,7 +384,8 @@ namespace shred_usage_writer
             this.Controls.Remove(PowderLotNumber);
             if (PowderLotNumber != null) { PowderLotNumber.Dispose(); }
             this.Controls.Remove(tableLayout);
-            if(tableLayout != null) { tableLayout.Dispose(); }
+            if (tableLayout != null) { tableLayout.Dispose(); }
+            errorProvider = new ErrorProvider();
         }
 
         private void InitializeBlockTypeA(string productNumber)
@@ -450,7 +425,7 @@ namespace shred_usage_writer
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            Date.Validating += LotDate_Validating;
+            this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
             skidNumberLabel = new Label();
             skidNumberLabel.Text = "Skid/Tote Number:";
@@ -522,7 +497,7 @@ namespace shred_usage_writer
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
-            this.Temp.Maximum = 50.00M;
+            this.Temp.Maximum = 80.00M;
             this.Temp.Value = 0.00M;
             this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
@@ -539,9 +514,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeA(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "Bin Seal Confirmation:";
+            binSealLabel.Text = "Verified mold is not present:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(300, 50);
+            binSealLabel.Size = new System.Drawing.Size(400, 100);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -691,7 +666,7 @@ namespace shred_usage_writer
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            Date.Validating += LotDate_Validating;
+            this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
             this.binWeightLabel = new Label();
             binWeightLabel.Text = "Bin Weight (lbs.):";
@@ -735,7 +710,7 @@ namespace shred_usage_writer
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
-            this.Temp.Maximum = 50.00M;
+            this.Temp.Maximum = 80.00M;
             this.Temp.Value = 0.00M;
             this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
@@ -752,9 +727,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeB(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "Bin Seal Confirmation:";
+            binSealLabel.Text = "Verified mold is not present:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(300, 50);
+            binSealLabel.Size = new System.Drawing.Size(400, 100);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -900,7 +875,7 @@ namespace shred_usage_writer
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            Date.Validating += LotDate_Validating;
+            this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
             this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
@@ -956,7 +931,7 @@ namespace shred_usage_writer
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
-            this.Temp.Maximum = 50.00M;
+            this.Temp.Maximum = 80.00M;
             this.Temp.Value = 0.00M;
             this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
@@ -973,9 +948,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeC(sender, e, productNumber); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "Bin Seal Confirmation:";
+            binSealLabel.Text = "Verified mold is not present:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(300, 50);
+            binSealLabel.Size = new System.Drawing.Size(400, 100);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1126,7 +1101,7 @@ namespace shred_usage_writer
             Date.Format = DateTimePickerFormat.Custom;
             Date.Size = new System.Drawing.Size(220, 50);
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
-            Date.Validating += LotDate_Validating;
+            this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
             skidNumberLabel = new Label();
             skidNumberLabel.Text = "Skid/Tote Number:";
@@ -1185,7 +1160,7 @@ namespace shred_usage_writer
             this.Temp.DecimalPlaces = 2;
             this.Temp.Increment = 0.1M;
             this.Temp.Minimum = 0.00M;
-            this.Temp.Maximum = 50.00M;
+            this.Temp.Maximum = 80.00M;
             this.Temp.Value = 0.00M;
             this.Temp.Size = new System.Drawing.Size(90, 50);
             Temp.Text = "";
@@ -1202,9 +1177,9 @@ namespace shred_usage_writer
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedScrap(sender, e); };
 
             this.binSealLabel = new Label();
-            binSealLabel.Text = "Bin Seal Confirmation:";
+            binSealLabel.Text = "Verified mold is not present:";
             binSealLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            binSealLabel.Size = new System.Drawing.Size(300, 50);
+            binSealLabel.Size = new System.Drawing.Size(400, 100);
             this.BinSealGrade = new CheckBox();
             this.BinSealGrade.Name = "Bin Seal Grade";
             BinSealGrade.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1542,7 +1517,7 @@ namespace shred_usage_writer
             }
 
             string i = "";
-            if(ComboBox1.Text.ToString()== "008-000005 PS Purchased" || ComboBox1.Text.ToString()== "008-000021 WM Purchased" || ComboBox1.Text.ToString() == "002-000035 Scrap")
+            if (ComboBox1.Text.ToString() == "008-000005 PS Purchased" || ComboBox1.Text.ToString() == "008-000021 WM Purchased" || ComboBox1.Text.ToString() == "002-000035 Scrap")
             {
                 string itemText = TrimItemNumber(ComboBox1.Text.ToString());
                 i = itemText + "    Tote/Bin #: " + ToteSkidNumber.Value.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
@@ -1889,28 +1864,36 @@ namespace shred_usage_writer
 
         //      VALIDATION METHODS
 
-        private void LotDate_Validating(object? sender, CancelEventArgs e)
+        private void LotDate_Validating(object? sender, CancelEventArgs e, string productNumber = "")
         {
-            errorProvider = new ErrorProvider();
 
-            DateTime sixMonthsAgo = DateTime.Now.AddMonths(-2);
-            DateTime sixMonthsFurther = DateTime.Now.AddMonths(2);
+            DateTime today = DateTime.Today;
+            DateTime maxValidDate = today.AddDays(-45);
+            DateTime minApprovalDate = string.Equals(productNumber, "scrap", StringComparison.OrdinalIgnoreCase)
+                                        ? today.AddDays(-25)
+                                        : today.AddDays(-30);
 
-            if (this.Date.Value <= sixMonthsAgo)
+            if (this.Date.Value < maxValidDate)
             {
-                MessageBox.Show($"This item's lot date is two months in the past. Please enter a valid lot date or contact your manager.");
+                MessageBox.Show("This item's lot date is over 45 days old. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
-            else if (this.Date.Value >= sixMonthsFurther)
+            else if (this.Date.Value < minApprovalDate)
             {
-                MessageBox.Show($"This item's lot date is two months or more in the future. Please enter a valid lot date or contact your manager.");
+                MessageBox.Show($"This item's lot date requires manager approval. Please confirm before proceeding.");
+                errorProvider.SetError(Date, "");
+                e.Cancel = false; // Allows continuation but with a warning
+            }
+            else if (this.Date.Value == today)
+            {
+                MessageBox.Show("This item's lot date is today. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
-            else if (this.Date.Value == DateTime.Today)
+            else if (this.Date.Value > today)
             {
-                MessageBox.Show($"This item's lot date is today's date. Please enter a valid lot date or contact your manager.");
+                MessageBox.Show("This item's lot date is in the future. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
@@ -1918,11 +1901,24 @@ namespace shred_usage_writer
             {
                 ClearValidationError(Date, e);
             }
+
+
+        }
+        // Wrapper method to match CancelEventHandler signature
+        private void LotDate_Validating_Handler(object sender, CancelEventArgs e)
+        {
+            if (ComboBox1.Text == "002-000035 Scrap")
+            {
+                LotDate_Validating(sender, e, "scrap");
+            }
+            else
+            {
+                LotDate_Validating(sender, e, ""); // Calls the main method with an empty product number
+            }
         }
 
         private void ToteSkidNumber_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (this.ToteSkidNumber.Value == 0 || this.ToteSkidNumber.Text == "")
             {
@@ -1938,7 +1934,6 @@ namespace shred_usage_writer
 
         private void BagCount_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (this.BagCount.Value == 0 || this.BagCount.Text == "")
             {
@@ -1954,7 +1949,6 @@ namespace shred_usage_writer
 
         private void PowderLotNumber_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (this.PowderLotNumber.Text.Length < 1 || this.PowderLotNumber.Text.Length > 14)
             {
@@ -1976,13 +1970,18 @@ namespace shred_usage_writer
 
         private void BinWeight_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
-            if (this.BinWeight.Value == 0.00M || this.BinWeight.Text == "")
+            if (this.BinWeight.Value <= 0.00M || this.BinWeight.Text == "")
             {
                 MessageBox.Show("Please enter a valid weight. Weight cannot be 0.");
                 e.Cancel = true;
                 errorProvider.SetError(BinWeight, "Please Enter a Valid Weight");
+            }
+            else if (BinWeight.Value >= 1200M)
+            {
+                MessageBox.Show("Please enter a valid weight. Weight cannot be over 1200lbs.");
+                e.Cancel = true;
+                errorProvider.SetError(BinWeight, "Please Enter a Valid Weight. Weight cannot be over 1200lbs.");
             }
             else
             {
@@ -1992,13 +1991,24 @@ namespace shred_usage_writer
 
         private void Temp_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (Temp.Value == 0.00M || Temp.Text == "")
             {
                 MessageBox.Show("Please enter a valid temperature.");
                 e.Cancel = true;
                 errorProvider.SetError(Temp, "Please Enter a Valid Temperature");
+            }
+            else if (Temp.Value >= 60.00M)
+            {
+                MessageBox.Show("Temperature is above 60°F. Please notify a manager to destory or put away item.");
+                e.Cancel = true;
+                errorProvider.SetError(Temp, "Temperature is Too High");
+            }
+            else if (Temp.Value >= 47.00M)
+            {
+                MessageBox.Show("This item's temperature requires manager approval. Temperature is above 47°F.");
+                e.Cancel = false;
+                ClearValidationError(Temp, e);
             }
             else
             {
@@ -2008,13 +2018,12 @@ namespace shred_usage_writer
 
         private void BinSealGrade_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (BinSealGrade.Checked == false)
             {
-                MessageBox.Show("Please mark that you have verified the quality of the block's seal.");
+                MessageBox.Show("Please mark that you have verified no mold is present.");
                 e.Cancel = true;
-                errorProvider.SetError(BinSealGrade, "Please Check to Verify Seal Quality");
+                errorProvider.SetError(BinSealGrade, "Please Check to Verify No Mold is Present");
             }
             else
             {
@@ -2024,7 +2033,6 @@ namespace shred_usage_writer
 
         private void Initials_Validating(object? sender, CancelEventArgs e)
         {
-            errorProvider = new ErrorProvider();
 
             if (Initials.Text.Length < 2 || Initials.Text.Length > 3)
             {
