@@ -658,7 +658,6 @@ namespace shred_usage_writer
             dateLabel.Text = "Lot Date:";
             dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             dateLabel.Size = new System.Drawing.Size(200, 50);
-            this.Controls.Add(dateLabel);
             Date = new DateTimePicker();
             Date.Name = "Date Picker";
             Date.CustomFormat = "MM-dd-yyyy";
@@ -672,7 +671,6 @@ namespace shred_usage_writer
             binWeightLabel.Text = "Bin Weight (lbs.):";
             binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             binWeightLabel.Size = new System.Drawing.Size(250, 50);
-            this.Controls.Add(binWeightLabel);
             this.BinWeight = new NumericUpDown();
             this.BinWeight.Name = "Bin Weight";
             BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -689,7 +687,6 @@ namespace shred_usage_writer
             startTimeLabel.Text = "Start Time:";
             startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             startTimeLabel.Size = new System.Drawing.Size(200, 50);
-            this.Controls.Add(startTimeLabel);
             this.StartTime = new DateTimePicker();
             this.StartTime.CustomFormat = "hh':'mm";
             StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -703,7 +700,6 @@ namespace shred_usage_writer
             tempLabel.Text = "Temperature (F°):";
             tempLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             tempLabel.Size = new System.Drawing.Size(250, 50);
-            this.Controls.Add(tempLabel);
             this.Temp = new NumericUpDown();
             this.Temp.Name = "Temperature";
             Temp.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -722,7 +718,6 @@ namespace shred_usage_writer
             this.SubmitButton.Text = "SUBMIT";
             this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
             SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
-            this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedTypeB(sender, e, productNumber); };
 
@@ -1873,7 +1868,20 @@ namespace shred_usage_writer
                                         ? today.AddDays(-25)
                                         : today.AddDays(-30);
 
-            if (this.Date.Value < maxValidDate)
+            DateTime max008Date = today.AddYears(-1);
+
+            if (ComboBox1.Text.ToString().Substring(0, 3) == "008" && this.Date.Value < max008Date)
+            {
+                MessageBox.Show($"This item's lot date requires manager approval. Please confirm before proceeding.");
+                errorProvider.SetError(Date, "");
+                e.Cancel = false; // Allows continuation but with a warning
+            }
+            else if (ComboBox1.Text.ToString().Substring(0, 3) == "008" && this.Date.Value > max008Date)
+            {
+                errorProvider.SetError(Date, "");
+                e.Cancel = false; // Allows continuation but with a warning
+            }
+            else if (this.Date.Value < maxValidDate)
             {
                 MessageBox.Show("This item's lot date is over 45 days old. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
