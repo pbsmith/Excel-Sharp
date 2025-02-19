@@ -100,12 +100,12 @@ namespace shred_usage_writer
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK1.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK3.xlsx");
 
             // Prevent unnecessary extraction if the file already exists
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK1.xlsx"; // Adjust with your namespace
+                string resourceName = "shred_usage_writer.Resources.BLANK3.xlsx"; // Adjust with your namespace
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -668,17 +668,17 @@ namespace shred_usage_writer
             this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
             this.binWeightLabel = new Label();
-            binWeightLabel.Text = "Bin Weight (lbs.):";
+            binWeightLabel.Text = "Qty. 40lb. Blocks Used:";
             binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             binWeightLabel.Size = new System.Drawing.Size(250, 50);
             this.BinWeight = new NumericUpDown();
             this.BinWeight.Name = "Bin Weight";
             BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.BinWeight.DecimalPlaces = 2;
-            this.BinWeight.Increment = 0.01M;
-            this.BinWeight.Minimum = 0.00M;
-            this.BinWeight.Maximum = 1200.00M;
-            this.BinWeight.Value = 0.00M;
+            this.BinWeight.Increment = 1;
+            this.BinWeight.Minimum = 0;
+            this.BinWeight.Maximum = 60;
+            this.BinWeight.Value = 0;
             BinWeight.Text = "";
             this.BinWeight.Size = new System.Drawing.Size(150, 50);
             BinWeight.Validating += BinWeight_Validating;
@@ -1432,7 +1432,7 @@ namespace shred_usage_writer
                     new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
                     new { Column1 = "#" + ToteSkidNumber.Value.ToString(), Column2 = NumberPieces.Value.ToString() + " pcs" },
                     new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
-                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = Initials.Text , Column2 = "" }
                 };
 
@@ -1536,7 +1536,7 @@ namespace shred_usage_writer
                 {
                     new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
                     new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
-                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = Initials.Text , Column2 = "" }
                 };
 
@@ -1625,7 +1625,7 @@ namespace shred_usage_writer
                 {
                     new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
                     new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
-                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = NumberPieces.Value.ToString() + " pcs" , Column2 = Initials.Text }
                 };
 
@@ -1719,7 +1719,7 @@ namespace shred_usage_writer
                 {
                     new { Column1 = "Scrap Tote", Column2 = this.Date.Value.ToShortDateString() },
                     new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
-                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "GOOD SEAL"},
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = "#" + ToteSkidNumber.Value.ToString() , Column2 = Initials.Text }
                 };
 
@@ -1978,8 +1978,20 @@ namespace shred_usage_writer
 
         private void BinWeight_Validating(object? sender, CancelEventArgs e)
         {
-
-            if (this.BinWeight.Value <= 0.00M || this.BinWeight.Text == "")
+            if (ComboBox1.Text.Substring(0, 3) == "008")
+            {
+                if(BinWeight.Value > 60 || BinWeight.Value <= 0 || BinWeight.Text == "")
+                {
+                    MessageBox.Show("Please enter a valid quantity of blocks per tote. Cannot be 0 or more than 60.");
+                    e.Cancel = true;
+                    errorProvider.SetError(BinWeight, "Please Enter a Valid Number Per Tote");
+                }
+                else
+                {
+                    ClearValidationError(BinWeight, e);
+                }
+            }
+            else if (this.BinWeight.Value <= 0.00M || this.BinWeight.Text == "")
             {
                 MessageBox.Show("Please enter a valid weight. Weight cannot be 0.");
                 e.Cancel = true;
