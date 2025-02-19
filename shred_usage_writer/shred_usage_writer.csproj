@@ -9,11 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.102.3" />
+    <None Remove="Resources\BLANK4.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <EmbeddedResource Include="Resources\BLANK4.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
   </ItemGroup>
 
 </Project>

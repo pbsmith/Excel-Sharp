@@ -46,7 +46,7 @@ namespace shred_usage_writer
             //}
             //this.wb = new XLWorkbook(filePath);
 
-            this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
+            this.solutionDirectory = AppDomain.CurrentDomain.BaseDirectory;
             Trace.WriteLine(solutionDirectory);
 
             string yearDirectory = System.IO.Path.Combine(solutionDirectory, thisYear.ToString());
@@ -100,12 +100,12 @@ namespace shred_usage_writer
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK3.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK4.xlsx");
 
             // Prevent unnecessary extraction if the file already exists
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK3.xlsx"; // Adjust with your namespace
+                string resourceName = "shred_usage_writer.Resources.BLANK4.xlsx"; // Adjust with your namespace
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
