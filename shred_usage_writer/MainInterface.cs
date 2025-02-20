@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace shred_usage_writer
 {
@@ -199,7 +200,7 @@ namespace shred_usage_writer
             ComboBox1.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.ComboBox1.TabIndex = 0;
             this.ComboBox1.Text = "Select Block Item";
-            string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000705",
+            string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000705 High BF", "001-000712 PS NN",
             "001-000525", "001-000528", "008-000005 PS Purchased", "008-000021 WM Purchased", "008-000001 Asiago", "008-000002 Cheddar", "008-000006 Parmesan",
             "008-000010 White Ched", "008-000022 Meunster", "008-000007 Provolone", "002-000035 Scrap", "Powder"};
             ComboBox1.Items.AddRange(installs);
@@ -266,43 +267,39 @@ namespace shred_usage_writer
             {
                 case "001-000133":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000133      ";
                     InitializeBlockTypeA("1-133");
                     break;
                 case "001-000169":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000169 Part-Skim Block";
                     InitializeBlockTypeA("1-169");
                     break;
                 case "001-000195":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000195      ";
                     InitializeBlockTypeA("1-195");
                     break;
                 case "001-000229":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000229      ";
                     InitializeBlockTypeA("1-229");
                     break;
                 case "001-000360":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000360      ";
                     InitializeBlockTypeA("1-360");
                     break;
                 case "001-000455":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000455      ";
                     InitializeBlockTypeA("1-455");
                     break;
                 case "001-000470":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000470      ";
                     InitializeBlockTypeA("1-470");
                     break;
-                case "001-000705":
+                case "001-000705 High BF":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000705      ";
                     InitializeBlockTypeA("1-705");
+                    break;
+                case "001-000712 PS NN":
+                    NewSelection();
+                    InitializeBlockTypeA("1-712");
                     break;
                 case "001-000525":
                     NewSelection();
@@ -387,6 +384,14 @@ namespace shred_usage_writer
             if (tableLayout != null) { tableLayout.Dispose(); }
             errorProvider = new ErrorProvider();
         }
+        public class FormattedNumericUpDown : NumericUpDown
+        {
+            protected override void UpdateEditText()
+            {
+                this.Text = this.Value.ToString("D3"); // Always show three digits
+            }
+        }
+
 
         private void InitializeBlockTypeA(string productNumber)
         {
@@ -431,16 +436,16 @@ namespace shred_usage_writer
             skidNumberLabel.Text = "Skid/Tote Number:";
             skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             skidNumberLabel.Size = new System.Drawing.Size(350, 50);
-            this.Controls.Add(skidNumberLabel);
-            ToteSkidNumber = new NumericUpDown();
+            ToteSkidNumber = new FormattedNumericUpDown();
             ToteSkidNumber.Name = "Skid Number";
             ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
-            ToteSkidNumber.Maximum = 199;
+            ToteSkidNumber.Maximum = 999;
             ToteSkidNumber.Minimum = 0;
             ToteSkidNumber.Value = 0;
             ToteSkidNumber.Text = "";
             ToteSkidNumber.Validating += ToteSkidNumber_Validating;
+            ToteSkidNumber.ValueChanged += ToteSkidNumber_ValueChanged;
 
             this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
@@ -634,6 +639,12 @@ namespace shred_usage_writer
             // Add TableLayoutPanel to Form
             this.Controls.Add(tableLayout);
         }
+
+        private void ToteSkidNumber_ValueChanged(object? sender, EventArgs e)
+        {
+            ToteSkidNumber.Invalidate(); // Forces a redraw of the control
+        }
+
 
         private void InitializeBlockTypeB(string productNumber)
         {
@@ -1112,6 +1123,7 @@ namespace shred_usage_writer
             ToteSkidNumber.Value = 0;
             ToteSkidNumber.Text = "";
             ToteSkidNumber.Validating += ToteSkidNumber_Validating;
+            ToteSkidNumber.ValueChanged += ToteSkidNumber_ValueChanged;
 
             this.binWeightLabel = new Label();
             binWeightLabel.Text = "Bin Weight (lbs.):";
@@ -1980,7 +1992,7 @@ namespace shred_usage_writer
         {
             if (ComboBox1.Text.Substring(0, 3) == "008")
             {
-                if(BinWeight.Value > 60 || BinWeight.Value <= 0 || BinWeight.Text == "")
+                if (BinWeight.Value > 60 || BinWeight.Value <= 0 || BinWeight.Text == "")
                 {
                     MessageBox.Show("Please enter a valid quantity of blocks per tote. Cannot be 0 or more than 60.");
                     e.Cancel = true;
@@ -2029,6 +2041,12 @@ namespace shred_usage_writer
                 MessageBox.Show("This item's temperature requires manager approval. Temperature is above 47°F.");
                 e.Cancel = false;
                 ClearValidationError(Temp, e);
+            }
+            else if (Temp.Value <= 30.00M)
+            {
+                MessageBox.Show("Temperature is 30°F or below. Please notify a manager and enter a valid temperature.");
+                e.Cancel = true;
+                errorProvider.SetError(Temp, "Temperature is Too Low");
             }
             else
             {
