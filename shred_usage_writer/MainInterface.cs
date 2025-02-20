@@ -101,12 +101,12 @@ namespace shred_usage_writer
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK4.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK5.xlsx");
 
             // Prevent unnecessary extraction if the file already exists
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK4.xlsx"; // Adjust with your namespace
+                string resourceName = "shred_usage_writer.Resources.BLANK5.xlsx"; // Adjust with your namespace
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -163,6 +163,9 @@ namespace shred_usage_writer
         internal TextBox Initials;
         internal NumericUpDown BagCount;
         internal TextBox PowderLotNumber;
+        internal GroupBox PowderBox;
+        internal RadioButton PowderJustFiber;
+        internal RadioButton PowderNoNat;
 
 
         //  Declare Labels
@@ -179,6 +182,10 @@ namespace shred_usage_writer
         internal Label initialsLabel;
         internal Label bagCountLabel;
         internal Label powderLotNumberLabel;
+        internal Label powderTypeLabel;
+        internal Label justFiberLabel;
+        internal Label noNatLabel;
+
 
         public static DirectoryInfo? GetSolutionDirectoryInfo(string? currentPath = null)
         {
@@ -384,13 +391,6 @@ namespace shred_usage_writer
             if (tableLayout != null) { tableLayout.Dispose(); }
             errorProvider = new ErrorProvider();
         }
-        public class FormattedNumericUpDown : NumericUpDown
-        {
-            protected override void UpdateEditText()
-            {
-                this.Text = this.Value.ToString("D3"); // Always show three digits
-            }
-        }
 
 
         private void InitializeBlockTypeA(string productNumber)
@@ -436,16 +436,15 @@ namespace shred_usage_writer
             skidNumberLabel.Text = "Skid/Tote Number:";
             skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             skidNumberLabel.Size = new System.Drawing.Size(350, 50);
-            ToteSkidNumber = new FormattedNumericUpDown();
+            ToteSkidNumber = new NumericUpDown();
             ToteSkidNumber.Name = "Skid Number";
             ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
-            ToteSkidNumber.Maximum = 999;
+            ToteSkidNumber.Maximum = 200;
             ToteSkidNumber.Minimum = 0;
             ToteSkidNumber.Value = 0;
             ToteSkidNumber.Text = "";
             ToteSkidNumber.Validating += ToteSkidNumber_Validating;
-            ToteSkidNumber.ValueChanged += ToteSkidNumber_ValueChanged;
 
             this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
@@ -639,12 +638,6 @@ namespace shred_usage_writer
             // Add TableLayoutPanel to Form
             this.Controls.Add(tableLayout);
         }
-
-        private void ToteSkidNumber_ValueChanged(object? sender, EventArgs e)
-        {
-            ToteSkidNumber.Invalidate(); // Forces a redraw of the control
-        }
-
 
         private void InitializeBlockTypeB(string productNumber)
         {
@@ -1123,7 +1116,6 @@ namespace shred_usage_writer
             ToteSkidNumber.Value = 0;
             ToteSkidNumber.Text = "";
             ToteSkidNumber.Validating += ToteSkidNumber_Validating;
-            ToteSkidNumber.ValueChanged += ToteSkidNumber_ValueChanged;
 
             this.binWeightLabel = new Label();
             binWeightLabel.Text = "Bin Weight (lbs.):";
@@ -1377,11 +1369,49 @@ namespace shred_usage_writer
             PowderLotNumber.CharacterCasing = CharacterCasing.Upper;
             PowderLotNumber.Validating += PowderLotNumber_Validating;
 
+            //Powder Type Control
+            //
+            powderTypeLabel = new Label();
+            powderTypeLabel.Text = "Powder Type:";
+            powderTypeLabel.Size = new System.Drawing.Size(200, 60);
+            powderTypeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            PowderBox = new GroupBox();
+            PowderBox.Name = "Powder Type Box";
+            PowderBox.Size = new System.Drawing.Size(300, 80);
+            PowderBox.FlatStyle = FlatStyle.Standard;
+            //  First Button
+            Label justFiberLabel = new Label();
+            justFiberLabel.Text = "Justfiber";
+            justFiberLabel.Location = new System.Drawing.Point(20, 25);
+            justFiberLabel.Size = new System.Drawing.Size(80, 30);
+            PowderBox.Controls.Add(justFiberLabel);
+            PowderJustFiber = new RadioButton();
+            PowderJustFiber.Name = "JustFiber";
+            PowderJustFiber.Location = new System.Drawing.Point(100, 25);
+            PowderJustFiber.Size = new System.Drawing.Size(30, 30);
+            PowderJustFiber.Validating += PowderJustFiber_Validating;
+            PowderBox.Controls.Add(PowderJustFiber);
+            //  Second Button
+            Label noNatLabel = new Label();
+            noNatLabel.Text = "No Nat";
+            noNatLabel.Location = new System.Drawing.Point(150, 25);
+            noNatLabel.Size = new System.Drawing.Size(80, 30);
+            PowderBox.Controls.Add(noNatLabel);
+            PowderNoNat = new RadioButton();
+            PowderNoNat.Name = "NoNat";
+            PowderNoNat.Location = new System.Drawing.Point(230, 25);
+            PowderNoNat.Size = new System.Drawing.Size(30, 30);
+            PowderNoNat.Validating += PowderNoNat_Validating;
+            PowderBox.Controls.Add(PowderNoNat);
+            //
+            ////
+
             this.SubmitButton = new Button();
             this.SubmitButton.Name = "Submit";
             this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
             this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Padding = new Padding(0,20,0,0);
             SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
@@ -1396,7 +1426,9 @@ namespace shred_usage_writer
             tableLayout.Controls.Add(Initials, 1, 2);
             tableLayout.Controls.Add(powderLotNumberLabel, 0, 3);
             tableLayout.Controls.Add(PowderLotNumber, 1, 3);
-            tableLayout.Controls.Add(SubmitButton, 1, 4);
+            tableLayout.Controls.Add(powderTypeLabel, 0, 4);
+            tableLayout.Controls.Add(PowderBox, 1, 4);
+            tableLayout.Controls.Add(SubmitButton, 1, 5);
 
 
             // Add TableLayoutPanel to Form
@@ -1818,11 +1850,21 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedPowder(object sender, EventArgs e)
         {
+            string powderSelection;
+            if(PowderJustFiber.Checked==true)
+            {
+                powderSelection = "Justfiber";
+            }
+            else
+            {
+                powderSelection = "No Nat";
+            }
+
             var data = new[]
                 {
                     new { Column1 = "Powder", Column2 = BagCount.Value.ToString() + " Bag(s)" },
                     new { Column1 = PowderLotNumber.Text  , Column2 = StartTime.Value.ToLongTimeString()  },
-                    new { Column1 = Initials.Text.ToString(), Column2 = ""},
+                    new { Column1 = Initials.Text.ToString(), Column2=powderSelection},
                 };
 
             if (InitializeSubmitCheck(data))
@@ -1846,7 +1888,16 @@ namespace shred_usage_writer
                 if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).IsEmpty())
                 {
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.BagCount.Value;
-                    columnNumber += 3;
+                    columnNumber++;
+                    if (powderSelection == "Justfiber")
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = 40;
+                    }
+                    else
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = 50;
+                    }
+                    columnNumber += 2;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.StartTime.Value;
                     columnNumber++;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.PowderLotNumber.Text;
@@ -1985,6 +2036,25 @@ namespace shred_usage_writer
             else
             {
                 ClearValidationError(PowderLotNumber, e);
+            }
+        }
+        private void PowderNoNat_Validating(object? sender, CancelEventArgs e)
+        {
+            if(PowderJustFiber.Checked == false && PowderNoNat.Checked == false)
+            {
+                MessageBox.Show("Please select a type of powder bag.");
+                e.Cancel = true;
+                errorProvider.SetError(PowderBox, "Please Select Powder Type");
+            }
+        }
+
+        private void PowderJustFiber_Validating(object? sender, CancelEventArgs e)
+        {
+            if (PowderJustFiber.Checked == false && PowderNoNat.Checked == false)
+            {
+                MessageBox.Show("Please select a type of powder bag.");
+                e.Cancel = true;
+                errorProvider.SetError(PowderBox, "Please Select Powder Type");
             }
         }
 
