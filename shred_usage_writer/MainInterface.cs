@@ -24,58 +24,36 @@ namespace shred_usage_writer
         int thisDay = DateTime.Now.Day;
         public MainInterface()
         {
-            //this.solutionDirectory = GetSolutionDirectoryInfo().ToString().Remove(GetSolutionDirectoryInfo().ToString().Length - 18);
-            //Trace.WriteLine(solutionDirectory);
-            //string yearDirectory = solutionDirectory + thisYear.ToString();
-            //if (!Directory.Exists(yearDirectory))
-            //{
-            //    Directory.CreateDirectory(yearDirectory);
-            //}
-            //string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
-            //string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
-            //if (!Directory.Exists(monthDirectory))
-            //{
-            //    Directory.CreateDirectory(monthDirectory);
-            //}
-            //string filePath = System.IO.Path.Combine(monthDirectory, thisDay.ToString() + "-" + monthName + "_Shred_Usage_Output" + ".xlsx");
-            //ogWorkbook = System.IO.Path.Combine(solutionDirectory, "blank.xlsx");
-            //if (!File.Exists(filePath))
-            //{
-            //    Trace.WriteLine(ogWorkbook);
-            //    File.Copy(ogWorkbook, filePath);
-
-            //}
-            //this.wb = new XLWorkbook(filePath);
-
-            this.solutionDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //Set up solution directory
+            solutionDirectory = AppDomain.CurrentDomain.BaseDirectory;
             Trace.WriteLine(solutionDirectory);
 
+
+            //Setting up year and month folders + day file
             string yearDirectory = System.IO.Path.Combine(solutionDirectory, thisYear.ToString());
             if (!Directory.Exists(yearDirectory))
             {
                 Directory.CreateDirectory(yearDirectory);
             }
-
             string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
             string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
             if (!Directory.Exists(monthDirectory))
             {
                 Directory.CreateDirectory(monthDirectory);
             }
-
             string filePath = System.IO.Path.Combine(monthDirectory, $"{thisDay}-{monthName}_Shred_Usage_Output.xlsx");
 
-            // Extract the embedded resource and get its path
-            ogWorkbook = ExtractBlankExcelTemplate();
 
+            // Extracting embedded resource and getting its path
+            ogWorkbook = ExtractBlankExcelTemplate();
             if (!File.Exists(filePath))
             {
                 File.Copy(ogWorkbook, filePath);
             }
 
-            // Load the new workbook
-            this.wb = new XLWorkbook(filePath);
 
+            // Load the workbook
+            this.wb = new XLWorkbook(filePath);
             using (var workbook = new XLWorkbook(filePath))
             {
                 foreach (var sheet in workbook.Worksheets)
@@ -85,28 +63,27 @@ namespace shred_usage_writer
             }
 
 
-
+            // Initializing components
             InitializeComponent();
-            this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
-            this.ShowIcon = false;
             InitializeComboBox();
             InitializeRightPanel();
-            //int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
-            //this.Width = screenWidth;
-            //this.Height = Screen.PrimaryScreen.WorkingArea.Height;
-            this.WindowState = FormWindowState.Maximized; // Maximizes the window
-            this.FormBorderStyle = FormBorderStyle.None;  // Hides the title bar
+
+
+            // Setting up window
+            this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
+            this.ShowIcon = false;
+            this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.None; 
             errorProvider = new ErrorProvider();
         }
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK5.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK6.xlsx");
 
-            // Prevent unnecessary extraction if the file already exists
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK5.xlsx"; // Adjust with your namespace
+                string resourceName = "shred_usage_writer.Resources.BLANK6.xlsx";
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -132,16 +109,19 @@ namespace shred_usage_writer
         TableLayoutPanel tableLayout;
 
 
-        // Declare List
+        // Declare running list on right panel
         private List<string> L = new List<string>();
 
-        // Declare Dynamic Item Name
+
+        // Declare dynamic item name for list input
         private string itemString;
 
-        // Declare Error Provider
+
+        // Declare error provider
         private ErrorProvider errorProvider;
 
-        // Declare Controls
+
+        // Declare controls
         internal MessageBox SubmitCheckBox;
         internal Button SubmitCheckBoxYes;
         internal Button SubmitCheckBoxNo;
@@ -168,7 +148,7 @@ namespace shred_usage_writer
         internal RadioButton PowderNoNat;
 
 
-        //  Declare Labels
+        //  Declare labels
         internal Label comboBoxLabel;
         internal Label dateLabel;
         internal Label skidNumberLabel;
@@ -200,7 +180,7 @@ namespace shred_usage_writer
 
         private void InitializeComboBox()
         {
-            this.ComboBox1 = new ComboBox();
+            ComboBox1 = new ComboBox();
             this.ComboBox1.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 2, 90);
             this.ComboBox1.Name = "ComboBox1";
             this.ComboBox1.Size = new System.Drawing.Size(360, 50);
@@ -209,7 +189,7 @@ namespace shred_usage_writer
             this.ComboBox1.Text = "Select Block Item";
             string[] installs = new string[] { "001-000133", "001-000169", "001-000195", "001-000229", "001-000360", "001-000455", "001-000470", "001-000705 High BF", "001-000712 PS NN",
             "001-000525", "001-000528", "008-000005 PS Purchased", "008-000021 WM Purchased", "008-000001 Asiago", "008-000002 Cheddar", "008-000006 Parmesan",
-            "008-000010 White Ched", "008-000022 Meunster", "008-000007 Provolone", "002-000035 Scrap", "Powder"};
+            "008-000010 White Ched", "008-000022 Meunster", "008-000007 Provolone", "002-000035 Scrap", "Powder", "Rework"};
             ComboBox1.Items.AddRange(installs);
             ComboBox1.CausesValidation = false;
             this.Controls.Add(this.ComboBox1);
@@ -310,63 +290,55 @@ namespace shred_usage_writer
                     break;
                 case "001-000525":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000525 Whole Milk Block";
                     InitializeBlockTypeA("1-525");
                     break;
                 case "001-000528":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     001-000528      ";
                     InitializeBlockTypeA("1-528");
                     break;
                 case "008-000005 PS Purchased":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000005      Purchased PS Block";
                     InitializeBlockTypeA("PS Purchased");
                     break;
                 case "008-000021 WM Purchased":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000021      Purchased WM Block";
                     InitializeBlockTypeA("WM Purchased");
                     break;
                 case "008-000001 Asiago":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000001      ";
                     InitializeBlockTypeB("Asiago40#");
                     break;
                 case "008-000002 Cheddar":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000002      ";
                     InitializeBlockTypeB("Ched40#");
                     break;
                 case "008-000006 Parmesan":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000006      ";
                     InitializeBlockTypeB("Parm40#");
                     break;
                 case "008-000010 White Ched":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000010      ";
                     InitializeBlockTypeB("WhiteChed40#");
                     break;
                 case "008-000022 Meunster":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000022      ";
                     InitializeBlockTypeC("MuensterCS");
                     break;
                 case "008-000007 Provolone":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     008-000007      ";
                     InitializeBlockTypeC("ProvLogCS");
                     break;
                 case "002-000035 Scrap":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     002-000035      ";
                     InitializeScrap();
                     break;
                 case "Powder":
                     NewSelection();
-                    this.Text = "Miceli Dairy Products - Block Usage Reporting Tool                     Powder      ";
                     InitializePowder();
+                    break;
+                case "Rework":
+                    NewSelection();
+                    InitializeRework();
                     break;
                 default:
                     MessageBox.Show("Please Make a Product Selection");
@@ -1433,6 +1405,11 @@ namespace shred_usage_writer
 
             // Add TableLayoutPanel to Form
             this.Controls.Add(tableLayout);
+        }
+
+        private void InitializeRework()
+        {
+
         }
 
 
