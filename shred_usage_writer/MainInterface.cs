@@ -73,17 +73,17 @@ namespace shred_usage_writer
             this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
             this.ShowIcon = false;
             this.WindowState = FormWindowState.Maximized;
-            this.FormBorderStyle = FormBorderStyle.None; 
+            this.FormBorderStyle = FormBorderStyle.None;
             errorProvider = new ErrorProvider();
         }
 
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK6.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK7.xlsx");
 
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK6.xlsx";
+                string resourceName = "shred_usage_writer.Resources.BLANK7.xlsx";
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -126,6 +126,7 @@ namespace shred_usage_writer
         internal Button SubmitCheckBoxYes;
         internal Button SubmitCheckBoxNo;
         internal ComboBox ComboBox1;
+        internal MaskedTextBox mtbJulian;
         internal DateTimePicker Date;
         internal NumericUpDown ToteSkidNumber;
         internal NumericUpDown NumberPieces;
@@ -137,6 +138,12 @@ namespace shred_usage_writer
         internal GroupBox FirmnessBox;
         internal RadioButton FirmnessFirm;
         internal RadioButton FirmnessSoft;
+        internal RadioButton rbGregorian;
+        internal RadioButton rbJulian;
+        internal RadioButton rbTote;
+        internal RadioButton rbBag;
+        internal RadioButton rbPiece;
+        internal RadioButton rbCase;
         internal GroupBox DelvicidBox;
         internal RadioButton DelvicidTrue;
         internal RadioButton DelvicidFalse;
@@ -146,6 +153,8 @@ namespace shred_usage_writer
         internal GroupBox PowderBox;
         internal RadioButton PowderJustFiber;
         internal RadioButton PowderNoNat;
+
+        internal ItemNumberControl itemControl;
 
 
         //  Declare labels
@@ -238,7 +247,7 @@ namespace shred_usage_writer
             labelVersion.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, 50);
             labelVersion.Font = new System.Drawing.Font("Arial", 8, FontStyle.Regular);
             labelVersion.Size = new Size(500, 60);
-            labelVersion.Text = "v1.0.0                                         PBS2025";
+            labelVersion.Text = "v1.0.1                                         PBS2025";
             labelVersion.ForeColor = System.Drawing.Color.Gray;
             this.Controls.Add(labelVersion);
 
@@ -838,7 +847,6 @@ namespace shred_usage_writer
             dateLabel.Text = "Lot Date:";
             dateLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             dateLabel.Size = new System.Drawing.Size(200, 50);
-            this.Controls.Add(dateLabel);
             Date = new DateTimePicker();
             Date.Name = "Date Picker";
             Date.CustomFormat = "MM-dd-yyyy";
@@ -852,7 +860,6 @@ namespace shred_usage_writer
             piecesNumberLabel.Text = "Number of Pieces:";
             piecesNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             piecesNumberLabel.Size = new System.Drawing.Size(350, 50);
-            this.Controls.Add(piecesNumberLabel);
             this.NumberPieces = new NumericUpDown();
             this.NumberPieces.Name = "Number of Pieces";
             NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -864,7 +871,6 @@ namespace shred_usage_writer
             binWeightLabel.Text = "Weight (lbs.):";
             binWeightLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             binWeightLabel.Size = new System.Drawing.Size(250, 50);
-            this.Controls.Add(binWeightLabel);
             this.BinWeight = new NumericUpDown();
             this.BinWeight.Name = "Bin Weight";
             BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1383,7 +1389,7 @@ namespace shred_usage_writer
             this.SubmitButton.Size = new System.Drawing.Size(180, 80);
             this.SubmitButton.Text = "SUBMIT";
             this.SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
-            SubmitButton.Padding = new Padding(0,20,0,0);
+            SubmitButton.Padding = new Padding(0, 20, 0, 0);
             SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             this.Controls.Add(this.SubmitButton);
             this.SubmitButton.Click +=
@@ -1409,8 +1415,307 @@ namespace shred_usage_writer
 
         private void InitializeRework()
         {
+            tableLayout = new TableLayoutPanel
+            {
+                ColumnCount = 3,
+                RowCount = 9,
+                AutoSize = true,
+                Location = new System.Drawing.Point(100, 250),
+                Width = this.Width / 2,
+                Padding = new Padding(20),
+                Dock = DockStyle.None
+            };
+            tableLayout.RowStyles.Clear(); // Clear any default row styles
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F)); // Label column
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 275F)); // Control column
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // **Notes column
+            for (int i = 0; i < tableLayout.RowCount; i++)
+            {
+                tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            }
 
+            Label lbl = new Label
+            {
+                Text = $"Item Shredded:",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 14),
+                TextAlign = ContentAlignment.MiddleRight
+            };
+
+            itemControl = new ItemNumberControl();
+
+            // Create RadioButtons for date selection
+            rbGregorian = new RadioButton
+            {
+                Text = "Gregorian Date",
+                Font = new System.Drawing.Font("Arial", 12),
+                //Location = new System.Drawing.Point(50, 50),
+                Checked = true, // Default selection,
+                Size = new System.Drawing.Size(200, 70)
+            };
+
+            rbJulian = new RadioButton
+            {
+                Text = "Julian Date",
+                Font = new System.Drawing.Font("Arial", 12),
+                Location = new System.Drawing.Point(200, 50),
+                Size = new System.Drawing.Size(200, 70)
+            };
+
+            // Create Gregorian DateTimePicker
+            Date = new DateTimePicker
+            {
+                Name = "dtpGregorian",
+                CustomFormat = "MM-dd-yyyy",
+                Font = new System.Drawing.Font("Arial", 14),
+                Format = DateTimePickerFormat.Custom,
+                Text = DateTime.Today.ToString("MM/dd/yyyy"),
+                Size = new Size(220, 50),
+                Visible = true
+            };
+
+            Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
+
+            // Create Julian Date Input (5-digit MaskedTextBox)
+            mtbJulian = new MaskedTextBox("00000")
+            {
+                Name = "mtbJulian",
+                Font = new System.Drawing.Font("Arial", 14),
+                Size = new Size(100, 50),
+                Location = new System.Drawing.Point(50, 100),
+                Visible = false // Hidden by default
+            };
+
+            // Handle switching between Gregorian & Julian input
+            rbGregorian.CheckedChanged += (s, e) =>
+            {
+                Date.Visible = rbGregorian.Checked;
+                mtbJulian.Visible = !rbGregorian.Checked;
+            };
+
+            rbJulian.CheckedChanged += (s, e) =>
+            {
+                mtbJulian.Visible = rbJulian.Checked;
+                Date.Visible = !rbJulian.Checked;
+            };
+
+            startTimeLabel = new Label();
+            startTimeLabel.Text = "Start Time:";
+            startTimeLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            startTimeLabel.Size = new System.Drawing.Size(200, 50);
+            StartTime = new DateTimePicker();
+            StartTime.CustomFormat = "hh':'mm";
+            StartTime.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            StartTime.Format = DateTimePickerFormat.Custom;
+            StartTime.ShowUpDown = true;
+            StartTime.Name = "Start Time";
+            StartTime.Size = new System.Drawing.Size(120, 50);
+
+            piecesNumberLabel = new Label();
+            piecesNumberLabel.Text = "Quantity:";
+            piecesNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            piecesNumberLabel.Size = new System.Drawing.Size(200, 50);
+            Controls.Add(piecesNumberLabel);
+            NumberPieces = new NumericUpDown();
+            NumberPieces.Name = "Quantity";
+            NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            NumberPieces.Minimum = 1;
+            NumberPieces.Maximum = 200;
+            NumberPieces.Size = new System.Drawing.Size(90, 50);
+
+            Label lblDisclaimerJulian = new Label
+            {
+                Text = "Enter the Julian date in a 5-digit format.\nExample: 05224 for Feb 21, 2024.",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 10),
+                ForeColor = System.Drawing.Color.DarkRed
+            };
+
+            Label lblDisclaimerItem = new Label
+            {
+                Text = "Enter the item code in it's hyphenated format.\nExample: '001' - '000679'",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 10),
+                ForeColor = System.Drawing.Color.DarkRed
+            };
+
+            Label lblDisclaimerQty = new Label
+            {
+                Text = "Enter the quantity of the item that will be reprocessed.\n\nSelect the unit type of the item below.",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 10),
+                ForeColor = System.Drawing.Color.DarkRed
+            };
+
+            Label lblDisclaimerQtyAlt = new Label
+            {
+                Text = "Enter the weight of a single unit.",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 10),
+                ForeColor = System.Drawing.Color.DarkRed
+            };
+
+            // Create GroupBox for Unit Selection
+            GroupBox gbUnitSelection = new GroupBox
+            {
+                Text = "Unit Type",
+                Font = new System.Drawing.Font("Arial", 12, FontStyle.Bold),
+                Size = new Size(410, 200)
+            };
+
+            // Create RadioButtons for unit selection
+            rbTote = new RadioButton
+            {
+                Text = "Tote(s)",
+                Font = new System.Drawing.Font("Arial", 10),
+                Checked = true, // Default selection
+                Size = new System.Drawing.Size(100, 50)
+            };
+
+            rbBag = new RadioButton
+            {
+                Text = "Bag(s)",
+                Font = new System.Drawing.Font("Arial", 10),
+                Size = new System.Drawing.Size(100, 50)
+            };
+
+            rbCase = new RadioButton
+            {
+                Text = "Case(s)",
+                Font = new System.Drawing.Font("Arial", 10),
+                Size = new System.Drawing.Size(100, 50)
+            };
+
+            rbPiece = new RadioButton
+            {
+                Text = "Piece(s)",
+                Font = new System.Drawing.Font("Arial", 10),
+                Size = new System.Drawing.Size(100, 50)
+            };
+
+            // Add RadioButtons for Unit Selection
+            gbUnitSelection.Controls.Add(rbTote);
+            gbUnitSelection.Controls.Add(rbBag);
+            gbUnitSelection.Controls.Add(rbCase);
+            gbUnitSelection.Controls.Add(rbPiece);
+
+            // Adjust positioning inside GroupBox
+            rbTote.Location = new System.Drawing.Point(20, 30);
+            rbBag.Location = new System.Drawing.Point(120, 30);
+            rbCase.Location = new System.Drawing.Point(220, 30);
+            rbPiece.Location = new System.Drawing.Point(320, 30);
+
+            // Variable to store the selected unit
+            string selectedUnit = "Tote"; // Default selection
+
+            // Event handler for selection change
+            EventHandler unitChangedHandler = (s, e) =>
+            {
+                if (rbTote.Checked) selectedUnit = "Tote";
+                else if (rbBag.Checked) selectedUnit = "Bag";
+                else if (rbCase.Checked) selectedUnit = "Case";
+                else if (rbPiece.Checked) selectedUnit = "Piece";
+            };
+
+            Label lblWeight = new Label
+            {
+                Text = "Weight (lbs.) per Tote:",
+                Font = new System.Drawing.Font("Arial", 14),
+                AutoSize = true,
+            };
+
+            // Weight Input TextBox
+            BinWeight = new NumericUpDown
+            {
+                Font = new System.Drawing.Font("Arial", 14),
+                Size = new Size(100, 50),
+                DecimalPlaces = 2,
+                Text = "",
+                Value = 0.00M,
+                Increment = 0.50M,
+                Minimum = 0.00M,
+                Maximum = 1200.00M
+            };
+            BinWeight.Validating += BinWeight_Validating;
+
+
+            // Event handler to update lblUnit based on the selected unit
+            void UpdateWeightLabel(object sender, EventArgs e)
+            {
+                if (rbTote.Checked) lblWeight.Text = "Weight (lbs.) per Tote:";
+                else if (rbBag.Checked) lblWeight.Text = "Weight (lbs.) per Bag:";
+                else if (rbCase.Checked) lblWeight.Text = "Weight (lbs.) per Case:";
+                else if (rbPiece.Checked) lblWeight.Text = "Weight (lbs.) per Piece:";
+            }
+
+            // Attach event handler to each RadioButton
+            rbTote.CheckedChanged += unitChangedHandler;
+            rbBag.CheckedChanged += unitChangedHandler;
+            rbCase.CheckedChanged += unitChangedHandler;
+            rbPiece.CheckedChanged += unitChangedHandler;
+            rbTote.CheckedChanged += UpdateWeightLabel;
+            rbBag.CheckedChanged += UpdateWeightLabel;
+            rbCase.CheckedChanged += UpdateWeightLabel;
+            rbPiece.CheckedChanged += UpdateWeightLabel;
+
+            this.initialsLabel = new Label();
+            initialsLabel.Text = "Manager's \nInitials:";
+            initialsLabel.Size = new System.Drawing.Size(130, 100);
+            initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Controls.Add(initialsLabel);
+            this.Initials = new TextBox();
+            this.Initials.Name = "Initials";
+            Initials.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+            this.Initials.Size = new System.Drawing.Size(70, 50);
+            Initials.CharacterCasing = CharacterCasing.Upper;
+            Initials.Validating += Initials_Validating;
+
+            Label lblDisclaimerInitials = new Label
+            {
+                Text = "Manager's initials are required for reprocessed items.",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 10),
+                ForeColor = System.Drawing.Color.DarkRed
+            };
+
+            SubmitButton = new Button();
+            SubmitButton.Name = "Submit";
+            SubmitButton.Size = new System.Drawing.Size(180, 80);
+            SubmitButton.Text = "SUBMIT";
+            SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
+            SubmitButton.Padding = new Padding(0, 20, 0, 0);
+            SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
+            this.SubmitButton.Click +=
+                delegate (object sender, EventArgs e) { SubmitButton_ClickedRework(sender, e); };
+
+
+            tableLayout.Controls.Add(lbl, 0, 0);
+            tableLayout.Controls.Add(itemControl, 1, 0);
+            tableLayout.Controls.Add(lblDisclaimerItem, 2, 0);
+            tableLayout.Controls.Add(rbGregorian, 0, 1);
+            tableLayout.Controls.Add(rbJulian, 1, 1);
+            tableLayout.Controls.Add(lblDisclaimerJulian, 2, 1);
+            tableLayout.Controls.Add(Date, 0, 2);
+            tableLayout.Controls.Add(mtbJulian, 1, 2);
+            tableLayout.Controls.Add(startTimeLabel, 0, 3);
+            tableLayout.Controls.Add(StartTime, 1, 3);
+            tableLayout.Controls.Add(piecesNumberLabel, 0, 4);
+            tableLayout.Controls.Add(NumberPieces, 1, 4);
+            tableLayout.Controls.Add(lblDisclaimerQty, 2, 4);
+            tableLayout.Controls.Add(gbUnitSelection, 1, 5);
+            tableLayout.SetColumnSpan(gbUnitSelection, 2);
+            tableLayout.SetRowSpan(gbUnitSelection, 2);
+            tableLayout.Controls.Add(lblWeight, 1, 7);
+            tableLayout.Controls.Add(BinWeight, 2, 7);
+            tableLayout.Controls.Add(lblDisclaimerQtyAlt, 0, 7);
+            tableLayout.Controls.Add(initialsLabel, 0, 8);
+            tableLayout.Controls.Add(Initials, 1, 8);
+            tableLayout.Controls.Add(lblDisclaimerInitials, 2, 8);
+            tableLayout.Controls.Add(SubmitButton, 1, 9);
+
+            this.Controls.Add(tableLayout);
         }
+
 
 
         //      SUBMITTING AND WRITING METHODS
@@ -1828,7 +2133,7 @@ namespace shred_usage_writer
         private void SubmitButton_ClickedPowder(object sender, EventArgs e)
         {
             string powderSelection;
-            if(PowderJustFiber.Checked==true)
+            if (PowderJustFiber.Checked == true)
             {
                 powderSelection = "Justfiber";
             }
@@ -1894,6 +2199,129 @@ namespace shred_usage_writer
 
             NewSelection();
             this.wb.Save();
+        }
+
+        private void SubmitButton_ClickedRework(object sender, EventArgs e)
+        {
+            string dateValue;
+            decimal weightValue = BinWeight.Value * NumberPieces.Value;
+            if (rbGregorian.Checked)
+            {
+                dateValue = this.Date.Value.ToShortDateString();
+            }
+            else
+            {
+                dateValue = mtbJulian.Text.ToString();
+            }
+
+            string item = itemControl.mtbFirstPart.Text + "-" + itemControl.mtbSecondPart.Text;
+
+            string unit;
+            if (rbBag.Checked)
+            {
+                unit = "BAG";
+            }
+            else if (rbCase.Checked)
+            {
+                unit = "CASE";
+            }
+            else if (rbTote.Checked)
+            {
+                unit = "TOTE";
+            }
+            else
+            {
+                unit = "PC";
+            }
+
+            var data = new[]
+                {
+                    new { Column1 = "Rework", Column2 = item },
+                    new { Column1 = weightValue.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = dateValue , Column2 = Initials.Text},
+                };
+
+            if (InitializeSubmitCheck(data))
+            {
+                return;
+            }
+
+            this.ws = wb.Worksheet("Rework");
+
+            bool dateFlag = false;
+            bool itemFlag = false;
+            int columnNumber = 3;
+
+            while (!dateFlag && !itemFlag)
+            {
+
+                bool itemExists = !ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "1").IsEmpty();
+                bool dateExists = !ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "2").IsEmpty();
+
+                // Check if Item Exists
+                if (!itemExists)
+                {
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "1").Value = item;
+                    itemFlag = true;
+                }
+                else if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "1").Value.ToString() == item)
+                {
+                    itemFlag = true;
+                }
+                else
+                {
+                    columnNumber += 10;
+                    continue; // Move to next column if item doesn't match
+                }
+
+                // Check if Date Exists
+                if (!dateExists)
+                {
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "2").Value = dateValue;
+                    dateFlag = true;
+                }
+                else if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + "2").Value.ToString() == dateValue)
+                {
+                    dateFlag = true;
+                }
+                else
+                {
+                    columnNumber += 10;
+                    itemFlag = false; // Reset itemFlag since we are moving to a new column
+                }
+            }
+            //Continue
+
+            columnNumber -= 1;
+            int rowNumber = 4;
+            bool flag = false;
+            while (flag == false)
+            {
+                if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).IsEmpty())
+                {
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = NumberPieces.Value.ToString();
+                    columnNumber += 1;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = BinWeight.Value.ToString();
+                    columnNumber += 2;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = StartTime.Value.ToShortTimeString();
+                    columnNumber++;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = unit;
+                    columnNumber += 2;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = Initials.Text.ToString();
+                    flag = true;
+                }
+                else
+                {
+                    rowNumber += 1;
+                }
+            }
+            string i = ComboBox1.Text.ToString() + ": " + item + " Lot #: " + dateValue + " Time: " + StartTime.Value.ToShortTimeString()
+                    + " ID: " + Initials.Text.ToString();
+            UpdateList(i);
+
+            NewSelection();
+            this.wb.Save();
+
         }
 
 
@@ -2017,7 +2445,7 @@ namespace shred_usage_writer
         }
         private void PowderNoNat_Validating(object? sender, CancelEventArgs e)
         {
-            if(PowderJustFiber.Checked == false && PowderNoNat.Checked == false)
+            if (PowderJustFiber.Checked == false && PowderNoNat.Checked == false)
             {
                 MessageBox.Show("Please select a type of powder bag.");
                 e.Cancel = true;

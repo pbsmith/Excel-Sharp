@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\BLANK6.xlsx" />
+    <None Remove="Resources\BLANK7.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\BLANK6.xlsx" />
+    <EmbeddedResource Include="Resources\BLANK7.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
