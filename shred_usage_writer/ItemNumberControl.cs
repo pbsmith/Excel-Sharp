@@ -14,26 +14,46 @@ namespace shred_usage_writer
     {
         public MaskedTextBox mtbFirstPart;
         public MaskedTextBox mtbSecondPart;
+        private ErrorProvider errorProvider = new ErrorProvider();
+
         public string ItemNumber => $"{mtbFirstPart.Text}-{mtbSecondPart.Text}";
 
         public ItemNumberControl()
         {
             InitializeComponent();
             InitializeControl();
+            this.CausesValidation = true; // Ensure validation is enabled
         }
 
         private void InitializeControl()
         {
             // First part of item number (3 digits)
-            mtbFirstPart = new MaskedTextBox("000") { Width = 50, TextAlign = HorizontalAlignment.Center };
-            mtbFirstPart.TextChanged += ValidateInput;
+            mtbFirstPart = new MaskedTextBox("000")
+            {
+                Width = 60,
+                TextAlign = HorizontalAlignment.Center,
+                Font = new System.Drawing.Font("Arial", 14),
+                Size = new System.Drawing.Size(60, 70),
+                TextMaskFormat = MaskFormat.ExcludePromptAndLiterals
+            };
 
             // Hyphen separator
-            Label lblHyphen = new Label { Text = "-", AutoSize = true };
+            Label lblHyphen = new Label
+            {
+                Text = "-",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 16)
+            };
 
             // Second part of item number (6 digits)
-            mtbSecondPart = new MaskedTextBox("000000") { Width = 80, TextAlign = HorizontalAlignment.Center };
-            mtbSecondPart.TextChanged += ValidateInput;
+            mtbSecondPart = new MaskedTextBox("000000")
+            {
+                Width = 120,
+                TextAlign = HorizontalAlignment.Center,
+                Font = new System.Drawing.Font("Arial", 14),
+                Size = new System.Drawing.Size(120, 70),
+                TextMaskFormat = MaskFormat.ExcludePromptAndLiterals
+            };
 
             // Layout
             FlowLayoutPanel panel = new FlowLayoutPanel { AutoSize = true };
@@ -43,10 +63,26 @@ namespace shred_usage_writer
             Controls.Add(panel);
         }
 
-        private void ValidateInput(object sender, EventArgs e)
+        // Override OnValidating for automatic validation
+        protected override void OnValidating(CancelEventArgs e)
         {
-            bool valid = mtbFirstPart.Text.Length == 3 && mtbSecondPart.Text.Length == 6;
-            this.BackColor = valid ? SystemColors.Control : System.Drawing.Color.LightCoral;
+            base.OnValidating(e); // Call base class validation
+
+            string firstPart = mtbFirstPart.Text.Trim();
+            string secondPart = mtbSecondPart.Text.Trim();
+
+            if (firstPart.Length != 3 || secondPart.Length != 6)
+            {
+                e.Cancel = true;
+                this.BackColor = System.Drawing.Color.LightCoral;
+                errorProvider.SetError(this, "Invalid Item Number. Format: XXX-XXXXXX (e.g., 123-456789)");
+            }
+            else
+            {
+                this.BackColor = SystemColors.Control;
+                errorProvider.SetError(this, ""); // Clear error
+            }
         }
     }
+
 }

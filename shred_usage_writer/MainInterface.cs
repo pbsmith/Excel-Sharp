@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -206,7 +207,6 @@ namespace shred_usage_writer
             comboBoxLabel = new Label();
             comboBoxLabel.Location = new System.Drawing.Point(((this.ClientSize.Width / 5) * 2) - 220, 90);
             comboBoxLabel.Size = new System.Drawing.Size(220, 50);
-            comboBoxLabel.Name = "comboBoxLabel";
             comboBoxLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
             comboBoxLabel.Text = "ITEM SELECT";
             this.Controls.Add(comboBoxLabel);
@@ -1427,7 +1427,7 @@ namespace shred_usage_writer
             };
             tableLayout.RowStyles.Clear(); // Clear any default row styles
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F)); // Label column
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 275F)); // Control column
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 320F)); // Control column
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // **Notes column
             for (int i = 0; i < tableLayout.RowCount; i++)
             {
@@ -1439,10 +1439,11 @@ namespace shred_usage_writer
                 Text = $"Item Shredded:",
                 AutoSize = true,
                 Font = new System.Drawing.Font("Arial", 14),
-                TextAlign = ContentAlignment.MiddleRight
             };
 
             itemControl = new ItemNumberControl();
+            itemControl.Size = new System.Drawing.Size(220, 70);
+
 
             // Create RadioButtons for date selection
             rbGregorian = new RadioButton
@@ -1451,7 +1452,8 @@ namespace shred_usage_writer
                 Font = new System.Drawing.Font("Arial", 12),
                 //Location = new System.Drawing.Point(50, 50),
                 Checked = true, // Default selection,
-                Size = new System.Drawing.Size(200, 70)
+                Size = new System.Drawing.Size(200, 70),
+                CausesValidation = false
             };
 
             rbJulian = new RadioButton
@@ -1459,7 +1461,8 @@ namespace shred_usage_writer
                 Text = "Julian Date",
                 Font = new System.Drawing.Font("Arial", 12),
                 Location = new System.Drawing.Point(200, 50),
-                Size = new System.Drawing.Size(200, 70)
+                Size = new System.Drawing.Size(200, 70),
+                CausesValidation = false
             };
 
             // Create Gregorian DateTimePicker
@@ -1474,17 +1477,18 @@ namespace shred_usage_writer
                 Visible = true
             };
 
-            Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
+            Date.Validating += ValidateDate;
 
             // Create Julian Date Input (5-digit MaskedTextBox)
             mtbJulian = new MaskedTextBox("00000")
             {
                 Name = "mtbJulian",
                 Font = new System.Drawing.Font("Arial", 14),
-                Size = new Size(100, 50),
-                Location = new System.Drawing.Point(50, 100),
+                Size = new Size(90, 50),
                 Visible = false // Hidden by default
             };
+
+            mtbJulian.Validating += ValidateDate;
 
             // Handle switching between Gregorian & Julian input
             rbGregorian.CheckedChanged += (s, e) =>
@@ -1515,7 +1519,6 @@ namespace shred_usage_writer
             piecesNumberLabel.Text = "Quantity:";
             piecesNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             piecesNumberLabel.Size = new System.Drawing.Size(200, 50);
-            Controls.Add(piecesNumberLabel);
             NumberPieces = new NumericUpDown();
             NumberPieces.Name = "Quantity";
             NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
@@ -1560,7 +1563,7 @@ namespace shred_usage_writer
             {
                 Text = "Unit Type",
                 Font = new System.Drawing.Font("Arial", 12, FontStyle.Bold),
-                Size = new Size(410, 200)
+                Size = new Size(480, 200)
             };
 
             // Create RadioButtons for unit selection
@@ -1569,28 +1572,28 @@ namespace shred_usage_writer
                 Text = "Tote(s)",
                 Font = new System.Drawing.Font("Arial", 10),
                 Checked = true, // Default selection
-                Size = new System.Drawing.Size(100, 50)
+                Size = new System.Drawing.Size(110, 50)
             };
 
             rbBag = new RadioButton
             {
                 Text = "Bag(s)",
                 Font = new System.Drawing.Font("Arial", 10),
-                Size = new System.Drawing.Size(100, 50)
+                Size = new System.Drawing.Size(110, 50)
             };
 
             rbCase = new RadioButton
             {
                 Text = "Case(s)",
                 Font = new System.Drawing.Font("Arial", 10),
-                Size = new System.Drawing.Size(100, 50)
+                Size = new System.Drawing.Size(110, 50)
             };
 
             rbPiece = new RadioButton
             {
                 Text = "Piece(s)",
                 Font = new System.Drawing.Font("Arial", 10),
-                Size = new System.Drawing.Size(100, 50)
+                Size = new System.Drawing.Size(110, 50)
             };
 
             // Add RadioButtons for Unit Selection
@@ -1601,9 +1604,9 @@ namespace shred_usage_writer
 
             // Adjust positioning inside GroupBox
             rbTote.Location = new System.Drawing.Point(20, 30);
-            rbBag.Location = new System.Drawing.Point(120, 30);
-            rbCase.Location = new System.Drawing.Point(220, 30);
-            rbPiece.Location = new System.Drawing.Point(320, 30);
+            rbBag.Location = new System.Drawing.Point(130, 30);
+            rbCase.Location = new System.Drawing.Point(240, 30);
+            rbPiece.Location = new System.Drawing.Point(350, 30);
 
             // Variable to store the selected unit
             string selectedUnit = "Tote"; // Default selection
@@ -1660,7 +1663,7 @@ namespace shred_usage_writer
 
             this.initialsLabel = new Label();
             initialsLabel.Text = "Manager's \nInitials:";
-            initialsLabel.Size = new System.Drawing.Size(130, 100);
+            initialsLabel.Size = new System.Drawing.Size(150, 100);
             initialsLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
             this.Controls.Add(initialsLabel);
             this.Initials = new TextBox();
@@ -1683,8 +1686,9 @@ namespace shred_usage_writer
             SubmitButton.Size = new System.Drawing.Size(180, 80);
             SubmitButton.Text = "SUBMIT";
             SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
-            SubmitButton.Padding = new Padding(0, 20, 0, 0);
+            SubmitButton.Padding = new Padding(20, 20, 20, 20);
             SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
+            SubmitButton.Dock = DockStyle.Right;
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedRework(sender, e); };
 
@@ -1707,7 +1711,6 @@ namespace shred_usage_writer
             tableLayout.SetRowSpan(gbUnitSelection, 2);
             tableLayout.Controls.Add(lblWeight, 1, 7);
             tableLayout.Controls.Add(BinWeight, 2, 7);
-            tableLayout.Controls.Add(lblDisclaimerQtyAlt, 0, 7);
             tableLayout.Controls.Add(initialsLabel, 0, 8);
             tableLayout.Controls.Add(Initials, 1, 8);
             tableLayout.Controls.Add(lblDisclaimerInitials, 2, 8);
@@ -1715,8 +1718,6 @@ namespace shred_usage_writer
 
             this.Controls.Add(tableLayout);
         }
-
-
 
         //      SUBMITTING AND WRITING METHODS
 
@@ -2237,6 +2238,7 @@ namespace shred_usage_writer
             var data = new[]
                 {
                     new { Column1 = "Rework", Column2 = item },
+                    new { Column1 = NumberPieces.Value.ToString(), Column2 = unit+"(S)"},
                     new { Column1 = weightValue.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
                     new { Column1 = dateValue , Column2 = Initials.Text},
                 };
@@ -2307,7 +2309,7 @@ namespace shred_usage_writer
                     columnNumber++;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = unit;
                     columnNumber += 2;
-                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = Initials.Text.ToString();
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = Initials.Text;
                     flag = true;
                 }
                 else
@@ -2315,8 +2317,8 @@ namespace shred_usage_writer
                     rowNumber += 1;
                 }
             }
-            string i = ComboBox1.Text.ToString() + ": " + item + " Lot #: " + dateValue + " Time: " + StartTime.Value.ToShortTimeString()
-                    + " ID: " + Initials.Text.ToString();
+            string i = ComboBox1.Text.ToString() + ": " + item + "   Lot #: " + dateValue + "   Time: " + StartTime.Value.ToShortTimeString()
+                    + "   ID: " + Initials.Text.ToString();
             UpdateList(i);
 
             NewSelection();
@@ -2327,9 +2329,35 @@ namespace shred_usage_writer
 
         //      VALIDATION METHODS
 
+        private void ValidateDate(object sender, CancelEventArgs e)
+        {
+            DateTime today = DateTime.Today;
+            DateTime maxValidDate = today.AddDays(-45);
+            DateTime minApprovalDate = today.AddDays(-30);
+            DateTime max008Date = today.AddDays(-25);
+
+            DateTime? lotDate = null;
+
+            if (rbJulian.Checked && sender == Date) return; // Skip Gregorian validation if Julian is selected
+            if (rbGregorian.Checked && sender == mtbJulian) return; // Skip Julian validation if Gregorian is selected
+
+            // If Julian date is selected
+            if (rbJulian.Checked)
+            {
+                lotDate = ParseJulianDate(mtbJulian.Text, e);
+                if (!lotDate.HasValue) return; // Stop processing if invalid Julian date
+            }
+            else if (rbGregorian.Checked)
+            {
+                lotDate = this.Date.Value;
+            }
+
+            ValidateStandardDate(lotDate.Value, maxValidDate, minApprovalDate, today, e);
+
+        }
+
         private void LotDate_Validating(object? sender, CancelEventArgs e, string productNumber = "")
         {
-
             DateTime today = DateTime.Today;
             DateTime maxValidDate = today.AddDays(-45);
             DateTime minApprovalDate = string.Equals(productNumber, "scrap", StringComparison.OrdinalIgnoreCase)
@@ -2337,6 +2365,7 @@ namespace shred_usage_writer
                                         : today.AddDays(-30);
 
             DateTime max008Date = today.AddYears(-1);
+
 
             if (ComboBox1.Text.ToString().Substring(0, 3) == "008" && this.Date.Value < max008Date)
             {
@@ -2349,38 +2378,38 @@ namespace shred_usage_writer
                 errorProvider.SetError(Date, "");
                 e.Cancel = false; // Allows continuation but with a warning
             }
-            else if (this.Date.Value < maxValidDate)
+            else if (this.Date.Value < maxValidDate && ComboBox1.Text != "Rework")
             {
                 MessageBox.Show("This item's lot date is over 45 days old. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
-            else if (this.Date.Value < minApprovalDate)
+            else if (this.Date.Value < minApprovalDate && ComboBox1.Text != "Rework")
             {
                 MessageBox.Show($"This item's lot date requires manager approval. Please confirm before proceeding.");
                 errorProvider.SetError(Date, "");
                 e.Cancel = false; // Allows continuation but with a warning
             }
-            else if (this.Date.Value == today)
+            else if (this.Date.Value == today && ComboBox1.Text != "Rework")
             {
                 MessageBox.Show("This item's lot date is today. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
-            else if (this.Date.Value > today)
+            else if (this.Date.Value > today && ComboBox1.Text != "Rework")
             {
                 MessageBox.Show("This item's lot date is in the future. Please enter a valid lot date or contact your manager.");
                 e.Cancel = true;
                 errorProvider.SetError(Date, "Please Enter a Valid Date");
             }
-            else
+            else if (ComboBox1.Text != "Rework")
             {
                 ClearValidationError(Date, e);
             }
 
 
         }
-        // Wrapper method to match CancelEventHandler signature
+
         private void LotDate_Validating_Handler(object sender, CancelEventArgs e)
         {
             if (ComboBox1.Text == "002-000035 Scrap")
@@ -2443,6 +2472,7 @@ namespace shred_usage_writer
                 ClearValidationError(PowderLotNumber, e);
             }
         }
+
         private void PowderNoNat_Validating(object? sender, CancelEventArgs e)
         {
             if (PowderJustFiber.Checked == false && PowderNoNat.Checked == false)
@@ -2563,6 +2593,67 @@ namespace shred_usage_writer
             {
                 ClearValidationError(Initials, e);
             }
+        }
+
+        private DateTime? ParseJulianDate(string julianText, CancelEventArgs e)
+        {
+            julianText = julianText.Trim();
+
+            if (julianText.Length != 5 ||
+                !int.TryParse(julianText.Substring(0, 3), out int dayOfYear) ||
+                !int.TryParse(julianText.Substring(3, 2), out int year))
+            {
+                ShowError("Invalid Julian date format. Please enter a valid 5-digit Julian date (e.g., 00125 for Jan 1, 2025).", mtbJulian, e);
+                return null;
+            }
+
+            year += 2000;
+
+            if (dayOfYear < 1 || dayOfYear > (DateTime.IsLeapYear(year) ? 366 : 365))
+            {
+                ShowError("Invalid Julian date. The day of the year is out of range.", mtbJulian, e);
+                return null;
+            }
+
+            return new DateTime(year, 1, 1).AddDays(dayOfYear - 1);
+        }
+
+        private void ValidateStandardDate(DateTime lotDate, DateTime maxValidDate, DateTime minApprovalDate, DateTime today, CancelEventArgs e)
+        {
+            if (lotDate < maxValidDate)
+            {
+                ShowError("This item's lot date is over 45 days old. Please enter a valid lot date or contact your manager.", Date, e);
+            }
+            else if (lotDate < minApprovalDate)
+            {
+                ShowWarning("This item's lot date requires manager approval. Please confirm before proceeding.", Date, e, false);
+            }
+            else if (lotDate == today)
+            {
+                ShowError("This item's lot date is today. Please enter a valid lot date or contact your manager.", Date, e);
+            }
+            else if (lotDate > today)
+            {
+                ShowError("This item's lot date is in the future. Please enter a valid lot date or contact your manager.", Date, e);
+            }
+            else
+            {
+                ClearValidationError(Date, e);
+            }
+        }
+
+        private void ShowError(string message, System.Windows.Forms.Control control, CancelEventArgs e)
+        {
+            MessageBox.Show(message);
+            e.Cancel = true;
+            errorProvider.SetError(control, message);
+        }
+
+        private void ShowWarning(string message, System.Windows.Forms.Control control, CancelEventArgs e, bool block)
+        {
+            MessageBox.Show(message);
+            e.Cancel = block;
+            errorProvider.SetError(control, "");
         }
 
         private void ClearValidationError(System.Windows.Forms.Control control, CancelEventArgs e)
