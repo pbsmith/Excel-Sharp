@@ -294,14 +294,15 @@ namespace shred_usage_writer
             this.Controls.Add(labelVersion);
 
             runningPounds = new Label();
-            runningPounds.Location = new System.Drawing.Point(1000, 600);
-            runningPounds.Font = new System.Drawing.Font("Arial", 20, FontStyle.Regular);
-            runningPounds.Size = new Size(200, 60);
+            runningPounds.Location = new System.Drawing.Point(1000, 400);
+            runningPounds.Font = new System.Drawing.Font("Segoe UI", 16, FontStyle.Bold);
+            runningPounds.ForeColor = System.Drawing.Color.DarkGreen;
+            runningPounds.BackColor = System.Drawing.Color.Transparent;
+            runningPounds.Size = new Size(400, 60);
             XLCellValue totalCell = RefreshPounds();
-            runningPounds.Text = totalCell.ToString();
+            runningPounds.Text = "Pounds Shredded: " + totalCell.ToString();
             runningPoundsTotal = totalCell.GetNumber();
             this.Controls.Add(runningPounds);
-
 
         }
 
@@ -424,7 +425,7 @@ namespace shred_usage_writer
             errorProvider = new ErrorProvider();
             this.Invoke((System.Windows.Forms.MethodInvoker)delegate
             {
-                runningPounds.Text = runningPoundsTotal.ToString();
+                runningPounds.Text = "Pounds Shredded: " + runningPoundsTotal.ToString();
             });
         }
 
