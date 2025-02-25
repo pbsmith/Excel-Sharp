@@ -1,8 +1,8 @@
-C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\shred_usage_writer.exe
-C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\shred_usage_writer.dll
-C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\shred_usage_writer.deps.json
-C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\shred_usage_writer.runtimeconfig.json
-C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\shred_usage_writer.pdb
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\MDP Shred Usage Writer.exe
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\MDP Shred Usage Writer.dll
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\MDP Shred Usage Writer.deps.json
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\MDP Shred Usage Writer.runtimeconfig.json
+C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\MDP Shred Usage Writer.pdb
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\ClosedXML.dll
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\DocumentFormat.OpenXml.dll
 C:\Users\psmith\workspace\Excel-Sharp\shred_usage_writer\bin\Release\net8.0-windows\publish\ExcelNumberFormat.dll

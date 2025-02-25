@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace shred_usage_writer
@@ -18,11 +19,87 @@ namespace shred_usage_writer
     {
         public XLWorkbook wb;
         public IXLWorksheet ws;
+
+        private System.Timers.Timer dateCheckTimer;
+
+        public string filePath;
         public string solutionDirectory;
         public string ogWorkbook;
+        private string itemString;
+
         int thisYear = DateTime.Now.Year;
         int thisMonth = DateTime.Now.Month;
         int thisDay = DateTime.Now.Day;
+        DateTime currentDay = DateTime.Today;
+
+        FlowLayoutPanel rightPanel = new FlowLayoutPanel();
+        TableLayoutPanel tableLayout;
+
+        private List<string> L = new List<string>();
+        private double runningPoundsTotal;
+
+        private ErrorProvider errorProvider;
+
+        internal MessageBox SubmitCheckBox;
+
+        internal Button SubmitCheckBoxYes;
+        internal Button SubmitCheckBoxNo;
+        internal Button SubmitButton;
+
+        internal ComboBox ComboBox1;
+
+        internal MaskedTextBox mtbJulian;
+
+        internal DateTimePicker Date;
+        internal DateTimePicker StartTime;
+
+        internal NumericUpDown ToteSkidNumber;
+        internal NumericUpDown NumberPieces;
+        internal NumericUpDown BinWeight;
+        internal NumericUpDown Temp;
+        internal NumericUpDown BagCount;
+
+        internal CheckBox BinSealGrade;
+
+        internal GroupBox FirmnessBox;
+        internal GroupBox DelvicidBox;
+        internal GroupBox PowderBox;
+
+        internal RadioButton FirmnessFirm;
+        internal RadioButton FirmnessSoft;
+        internal RadioButton rbGregorian;
+        internal RadioButton rbJulian;
+        internal RadioButton rbTote;
+        internal RadioButton rbBag;
+        internal RadioButton rbPiece;
+        internal RadioButton rbCase;
+        internal RadioButton DelvicidTrue;
+        internal RadioButton DelvicidFalse;
+        internal RadioButton PowderJustFiber;
+        internal RadioButton PowderNoNat;
+
+        internal TextBox Initials;
+        internal TextBox PowderLotNumber;
+
+        internal ItemNumberControl itemControl;
+
+        internal Label comboBoxLabel;
+        internal Label dateLabel;
+        internal Label skidNumberLabel;
+        internal Label piecesNumberLabel;
+        internal Label binWeightLabel;
+        internal Label startTimeLabel;
+        internal Label tempLabel;
+        internal Label binSealLabel;
+        internal Label firmnessLabel;
+        internal Label delvicidLabel;
+        internal Label initialsLabel;
+        internal Label bagCountLabel;
+        internal Label powderLotNumberLabel;
+        internal Label powderTypeLabel;
+        internal Label justFiberLabel;
+        internal Label noNatLabel;
+        internal Label runningPounds;
         public MainInterface()
         {
             //Set up solution directory
@@ -42,7 +119,7 @@ namespace shred_usage_writer
             {
                 Directory.CreateDirectory(monthDirectory);
             }
-            string filePath = System.IO.Path.Combine(monthDirectory, $"{thisDay}-{monthName}_Shred_Usage_Output.xlsx");
+            filePath = System.IO.Path.Combine(monthDirectory, $"{thisDay}-{monthName}_Shred_Usage_Output.xlsx");
 
 
             // Extracting embedded resource and getting its path
@@ -51,6 +128,10 @@ namespace shred_usage_writer
             {
                 File.Copy(ogWorkbook, filePath);
             }
+
+            dateCheckTimer = new System.Timers.Timer(3600000); // Check every hour
+            dateCheckTimer.Elapsed += CheckDateChange;
+            dateCheckTimer.Start();
 
 
             // Load the workbook
@@ -71,20 +152,18 @@ namespace shred_usage_writer
 
 
             // Setting up window
-            this.Text = "Miceli Dairy Products - Shred Usage Reporting Tool";
             this.ShowIcon = false;
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
             errorProvider = new ErrorProvider();
         }
-
         private string ExtractBlankExcelTemplate()
         {
-            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK7.xlsx");
+            string tempPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BLANK8.xlsx");
 
             if (!File.Exists(tempPath))
             {
-                string resourceName = "shred_usage_writer.Resources.BLANK7.xlsx";
+                string resourceName = "shred_usage_writer.Resources.BLANK8.xlsx";
 
                 using (Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
@@ -105,88 +184,51 @@ namespace shred_usage_writer
             return tempPath;
         }
 
-
-        FlowLayoutPanel rightPanel = new FlowLayoutPanel();
-        TableLayoutPanel tableLayout;
-
-
-        // Declare running list on right panel
-        private List<string> L = new List<string>();
-
-
-        // Declare dynamic item name for list input
-        private string itemString;
-
-
-        // Declare error provider
-        private ErrorProvider errorProvider;
-
-
-        // Declare controls
-        internal MessageBox SubmitCheckBox;
-        internal Button SubmitCheckBoxYes;
-        internal Button SubmitCheckBoxNo;
-        internal ComboBox ComboBox1;
-        internal MaskedTextBox mtbJulian;
-        internal DateTimePicker Date;
-        internal NumericUpDown ToteSkidNumber;
-        internal NumericUpDown NumberPieces;
-        internal NumericUpDown BinWeight;
-        internal DateTimePicker StartTime;
-        internal NumericUpDown Temp;
-        internal Button SubmitButton;
-        internal CheckBox BinSealGrade;
-        internal GroupBox FirmnessBox;
-        internal RadioButton FirmnessFirm;
-        internal RadioButton FirmnessSoft;
-        internal RadioButton rbGregorian;
-        internal RadioButton rbJulian;
-        internal RadioButton rbTote;
-        internal RadioButton rbBag;
-        internal RadioButton rbPiece;
-        internal RadioButton rbCase;
-        internal GroupBox DelvicidBox;
-        internal RadioButton DelvicidTrue;
-        internal RadioButton DelvicidFalse;
-        internal TextBox Initials;
-        internal NumericUpDown BagCount;
-        internal TextBox PowderLotNumber;
-        internal GroupBox PowderBox;
-        internal RadioButton PowderJustFiber;
-        internal RadioButton PowderNoNat;
-
-        internal ItemNumberControl itemControl;
-
-
-        //  Declare labels
-        internal Label comboBoxLabel;
-        internal Label dateLabel;
-        internal Label skidNumberLabel;
-        internal Label piecesNumberLabel;
-        internal Label binWeightLabel;
-        internal Label startTimeLabel;
-        internal Label tempLabel;
-        internal Label binSealLabel;
-        internal Label firmnessLabel;
-        internal Label delvicidLabel;
-        internal Label initialsLabel;
-        internal Label bagCountLabel;
-        internal Label powderLotNumberLabel;
-        internal Label powderTypeLabel;
-        internal Label justFiberLabel;
-        internal Label noNatLabel;
-
-
-        public static DirectoryInfo? GetSolutionDirectoryInfo(string? currentPath = null)
+        private void CheckDateChange(object sender, ElapsedEventArgs e)
         {
-            DirectoryInfo? directory = new(
-                currentPath ?? Directory.GetCurrentDirectory());
-            while (directory != null && !directory.GetFiles("*.sln").Any())
+            if (DateTime.Now > currentDay)
             {
-                directory = directory.Parent;
+                EnsureSpreadsheetExists();
+                currentDay = DateTime.Now;
             }
-            return directory;
         }
+
+        private void EnsureSpreadsheetExists()
+        {
+            thisYear = DateTime.Now.Year;
+            thisMonth = DateTime.Now.Month;
+            thisDay = DateTime.Now.Day;
+
+            solutionDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string yearDirectory = System.IO.Path.Combine(solutionDirectory, thisYear.ToString());
+            if (!Directory.Exists(yearDirectory))
+            {
+                Directory.CreateDirectory(yearDirectory);
+            }
+            string monthName = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(thisMonth);
+            string monthDirectory = System.IO.Path.Combine(yearDirectory, monthName);
+            if (!Directory.Exists(monthDirectory))
+            {
+                Directory.CreateDirectory(monthDirectory);
+            }
+            filePath = System.IO.Path.Combine(monthDirectory, $"{thisDay}-{monthName}_Shred_Usage_Output.xlsx");
+
+            ogWorkbook = ExtractBlankExcelTemplate();
+            if (!File.Exists(filePath))
+            {
+                File.Copy(ogWorkbook, filePath);
+            }
+
+            if (File.Exists(filePath))
+            {
+                this.wb?.Dispose(); // Close the existing workbook before overwriting
+            }
+
+            this.wb = new XLWorkbook(filePath);
+        }
+
+        //      COMPONENT INITIALIZATION
 
         private void InitializeComboBox()
         {
@@ -251,8 +293,17 @@ namespace shred_usage_writer
             labelVersion.ForeColor = System.Drawing.Color.Gray;
             this.Controls.Add(labelVersion);
 
-        }
+            runningPounds = new Label();
+            runningPounds.Location = new System.Drawing.Point(1000, 600);
+            runningPounds.Font = new System.Drawing.Font("Arial", 20, FontStyle.Regular);
+            runningPounds.Size = new Size(200, 60);
+            XLCellValue totalCell = RefreshPounds();
+            runningPounds.Text = totalCell.ToString();
+            runningPoundsTotal = totalCell.GetNumber();
+            this.Controls.Add(runningPounds);
 
+
+        }
 
         private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -371,8 +422,11 @@ namespace shred_usage_writer
             this.Controls.Remove(tableLayout);
             if (tableLayout != null) { tableLayout.Dispose(); }
             errorProvider = new ErrorProvider();
+            this.Invoke((System.Windows.Forms.MethodInvoker)delegate
+            {
+                runningPounds.Text = runningPoundsTotal.ToString();
+            });
         }
-
 
         private void InitializeBlockTypeA(string productNumber)
         {
@@ -659,14 +713,13 @@ namespace shred_usage_writer
             this.BinWeight = new NumericUpDown();
             this.BinWeight.Name = "Bin Weight";
             BinWeight.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 1;
             this.BinWeight.Minimum = 0;
             this.BinWeight.Maximum = 60;
             this.BinWeight.Value = 0;
             BinWeight.Text = "";
-            this.BinWeight.Size = new System.Drawing.Size(150, 50);
-            BinWeight.Validating += BinWeight_Validating;
+            this.BinWeight.Size = new System.Drawing.Size(100, 50);
+            BinWeight.Validating += QtyBlocks_Validating;
 
             this.startTimeLabel = new Label();
             startTimeLabel.Text = "Start Time:";
@@ -1522,9 +1575,12 @@ namespace shred_usage_writer
             NumberPieces = new NumericUpDown();
             NumberPieces.Name = "Quantity";
             NumberPieces.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            NumberPieces.Minimum = 1;
-            NumberPieces.Maximum = 200;
+            NumberPieces.Minimum = 0;
+            NumberPieces.Maximum = 999;
+            NumberPieces.Text = "";
+            NumberPieces.Value = 0;
             NumberPieces.Size = new System.Drawing.Size(90, 50);
+            NumberPieces.Validating += NumberPieces_Validating;
 
             Label lblDisclaimerJulian = new Label
             {
@@ -1719,7 +1775,9 @@ namespace shred_usage_writer
             this.Controls.Add(tableLayout);
         }
 
+
         //      SUBMITTING AND WRITING METHODS
+
 
         public static string ColumnNumberToName(int columnNumber)
         {
@@ -1853,6 +1911,8 @@ namespace shred_usage_writer
             }
             UpdateList(i);
 
+            runningPoundsTotal += (double)BinWeight.Value;
+
             NewSelection();
             this.wb.Save();
         }
@@ -1862,7 +1922,7 @@ namespace shred_usage_writer
             var data = new[]
                 {
                     new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
-                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = BinWeight.Value.ToString() + " pcs."  , Column2 = StartTime.Value.ToLongTimeString()  },
                     new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = Initials.Text , Column2 = "" }
                 };
@@ -1941,6 +2001,8 @@ namespace shred_usage_writer
             string i = itemText + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
                     + "    ID: " + Initials.Text.ToString();
             UpdateList(i);
+
+            runningPoundsTotal += (double)BinWeight.Value*40;
 
             NewSelection();
             this.wb.Save();
@@ -2036,6 +2098,8 @@ namespace shred_usage_writer
                     + "    ID: " + Initials.Text.ToString();
             UpdateList(i);
 
+            runningPoundsTotal += (double)BinWeight.Value;
+
             NewSelection();
             this.wb.Save();
         }
@@ -2127,6 +2191,8 @@ namespace shred_usage_writer
                     + "    ID: " + Initials.Text.ToString();
             UpdateList(i);
 
+            runningPoundsTotal += (double)BinWeight.Value;
+
             NewSelection();
             this.wb.Save();
         }
@@ -2197,6 +2263,15 @@ namespace shred_usage_writer
             string i = ComboBox1.Text.ToString() + "    Bag Count: " + BagCount.Value.ToString() + "    Lot #: " + PowderLotNumber.Text.ToString() + "    Time: " + StartTime.Value.ToShortTimeString()
                     + "    ID: " + Initials.Text.ToString();
             UpdateList(i);
+            
+            if(powderSelection == "No Nat")
+            {
+                runningPoundsTotal += (double)BagCount.Value * 50;
+            }
+            else
+            {
+                runningPoundsTotal += (double)BagCount.Value * 40;
+            }
 
             NewSelection();
             this.wb.Save();
@@ -2308,7 +2383,7 @@ namespace shred_usage_writer
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = StartTime.Value.ToShortTimeString();
                     columnNumber++;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = unit;
-                    columnNumber += 2;
+                    columnNumber += 4;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = Initials.Text;
                     flag = true;
                 }
@@ -2321,6 +2396,8 @@ namespace shred_usage_writer
                     + "   ID: " + Initials.Text.ToString();
             UpdateList(i);
 
+            runningPoundsTotal += (double)weightValue;
+
             NewSelection();
             this.wb.Save();
 
@@ -2328,6 +2405,21 @@ namespace shred_usage_writer
 
 
         //      VALIDATION METHODS
+
+
+        private void NumberPieces_Validating(object? sender, CancelEventArgs e)
+        {
+            if (NumberPieces.Value == 0 || NumberPieces.Text == "")
+            {
+                MessageBox.Show("Please enter a valid quantity. Quantity cannot be 0.");
+                e.Cancel = true;
+                errorProvider.SetError(NumberPieces, "Please Enter a Valid Quantity");
+            }
+            else
+            {
+                ClearValidationError(NumberPieces, e);
+            }
+        }
 
         private void ValidateDate(object sender, CancelEventArgs e)
         {
@@ -2495,20 +2587,7 @@ namespace shred_usage_writer
 
         private void BinWeight_Validating(object? sender, CancelEventArgs e)
         {
-            if (ComboBox1.Text.Substring(0, 3) == "008")
-            {
-                if (BinWeight.Value > 60 || BinWeight.Value <= 0 || BinWeight.Text == "")
-                {
-                    MessageBox.Show("Please enter a valid quantity of blocks per tote. Cannot be 0 or more than 60.");
-                    e.Cancel = true;
-                    errorProvider.SetError(BinWeight, "Please Enter a Valid Number Per Tote");
-                }
-                else
-                {
-                    ClearValidationError(BinWeight, e);
-                }
-            }
-            else if (this.BinWeight.Value <= 0.00M || this.BinWeight.Text == "")
+            if (this.BinWeight.Value <= 0.00M || this.BinWeight.Text == "")
             {
                 MessageBox.Show("Please enter a valid weight. Weight cannot be 0.");
                 e.Cancel = true;
@@ -2592,6 +2671,20 @@ namespace shred_usage_writer
             else
             {
                 ClearValidationError(Initials, e);
+            }
+        }
+
+        private void QtyBlocks_Validating(object? sender, CancelEventArgs e)
+        {
+            if (BinWeight.Value > 60 || BinWeight.Value <= 0 || BinWeight.Text == "")
+            {
+                MessageBox.Show("Please enter a valid quantity of blocks per tote. Cannot be 0 or more than 60.");
+                e.Cancel = true;
+                errorProvider.SetError(BinWeight, "Please Enter a Valid Number Per Tote");
+            }
+            else
+            {
+                ClearValidationError(BinWeight, e);
             }
         }
 
@@ -2691,6 +2784,12 @@ namespace shred_usage_writer
         private string TrimItemNumber(string item)
         {
             return item.Substring(11);
+        }
+
+        private XLCellValue RefreshPounds()
+        {
+            this.ws = wb.Worksheet("Totals");
+            return this.ws.Cell(24, ColumnNumberToName(3)).Value;
         }
     }
 }

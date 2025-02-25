@@ -6,14 +6,19 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>MDP Shred Usage Writer</AssemblyName>
+    <Version>1.0.1</Version>
+	<ApplicationIcon>Resources\mdp_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\BLANK7.xlsx" />
+    <None Remove="Resources\BLANK8.xlsx" />
+    <None Remove="Resources\mdp_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\BLANK7.xlsx" />
+    <EmbeddedResource Include="Resources\BLANK8.xlsx" />
+    <EmbeddedResource Include="Resources\mdp_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

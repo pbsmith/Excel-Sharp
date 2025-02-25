@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KhqTR/fAPoU=",
+  "dgSpecHash": "VcnkzhxPpw0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
+  "projectFilePath": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\psmith\\.nuget\\packages\\closedxml\\0.102.3\\closedxml.0.102.3.nupkg.sha512",
     "C:\\Users\\psmith\\.nuget\\packages\\documentformat.openxml\\2.16.0\\documentformat.openxml.2.16.0.nupkg.sha512",
