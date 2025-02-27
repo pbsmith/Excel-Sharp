@@ -4763,7 +4763,7 @@
     "version": "1.0.2",
     "restore": {
       "projectUniqueName": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
-      "projectName": "MDP Shred Usage Writer",
+      "projectName": "MDP Shred Usage Writer v1.0.2",
       "projectPath": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
       "packagesPath": "C:\\Users\\psmith\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\obj\\",
