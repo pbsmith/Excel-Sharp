@@ -82,6 +82,7 @@ namespace shred_usage_writer
         internal TextBox PowderLotNumber;
 
         internal ItemNumberControl itemControl;
+        internal ItemNumberControl itemControlB;
 
         internal Label comboBoxLabel;
         internal Label dateLabel;
@@ -289,16 +290,17 @@ namespace shred_usage_writer
             labelVersion.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, 50);
             labelVersion.Font = new System.Drawing.Font("Arial", 8, FontStyle.Regular);
             labelVersion.Size = new Size(500, 60);
-            labelVersion.Text = "v1.0.1                                         PBS2025";
+            labelVersion.Text = "v1.0.2                                         PBS2025";
             labelVersion.ForeColor = System.Drawing.Color.Gray;
             this.Controls.Add(labelVersion);
 
             runningPounds = new Label();
-            runningPounds.Location = new System.Drawing.Point(1000, 400);
+            runningPounds.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, (this.ClientSize.Height / 3)+140);
             runningPounds.Font = new System.Drawing.Font("Segoe UI", 16, FontStyle.Bold);
-            runningPounds.ForeColor = System.Drawing.Color.DarkGreen;
-            runningPounds.BackColor = System.Drawing.Color.Transparent;
-            runningPounds.Size = new Size(400, 60);
+            runningPounds.ForeColor = System.Drawing.Color.DarkGray;
+            runningPounds.BackColor = System.Drawing.Color.White;
+            runningPounds.BorderStyle = BorderStyle.FixedSingle;
+            runningPounds.Size = new Size(500, 60);
             XLCellValue totalCell = RefreshPounds();
             runningPounds.Text = "Pounds Shredded: " + totalCell.ToString();
             runningPoundsTotal = totalCell.GetNumber();
@@ -1498,6 +1500,16 @@ namespace shred_usage_writer
             itemControl = new ItemNumberControl();
             itemControl.Size = new System.Drawing.Size(220, 70);
 
+            Label lblB = new Label
+            {
+                Text = $"Item Created:",
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 14),
+            };
+
+            itemControlB = new ItemNumberControl();
+            itemControlB.Size = new System.Drawing.Size(220, 70);
+
 
             // Create RadioButtons for date selection
             rbGregorian = new RadioButton
@@ -1745,7 +1757,6 @@ namespace shred_usage_writer
             SubmitButton.TextAlign = ContentAlignment.MiddleCenter;
             SubmitButton.Padding = new Padding(20, 20, 20, 20);
             SubmitButton.Font = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
-            SubmitButton.Dock = DockStyle.Right;
             this.SubmitButton.Click +=
                 delegate (object sender, EventArgs e) { SubmitButton_ClickedRework(sender, e); };
 
@@ -1771,7 +1782,9 @@ namespace shred_usage_writer
             tableLayout.Controls.Add(initialsLabel, 0, 8);
             tableLayout.Controls.Add(Initials, 1, 8);
             tableLayout.Controls.Add(lblDisclaimerInitials, 2, 8);
-            tableLayout.Controls.Add(SubmitButton, 1, 9);
+            tableLayout.Controls.Add(lblB, 0, 9);
+            tableLayout.Controls.Add(itemControlB, 1, 9);
+            tableLayout.Controls.Add(SubmitButton, 2, 9);
 
             this.Controls.Add(tableLayout);
         }
@@ -2292,6 +2305,7 @@ namespace shred_usage_writer
             }
 
             string item = itemControl.mtbFirstPart.Text + "-" + itemControl.mtbSecondPart.Text;
+            string itemCreated = itemControlB.mtbFirstPart.Text + "-" + itemControlB.mtbSecondPart.Text;
 
             string unit;
             if (rbBag.Checked)
@@ -2313,10 +2327,11 @@ namespace shred_usage_writer
 
             var data = new[]
                 {
-                    new { Column1 = "Rework", Column2 = item },
+                    new { Column1 = " REWORK: ", Column2 = item },
                     new { Column1 = NumberPieces.Value.ToString(), Column2 = unit+"(S)"},
                     new { Column1 = weightValue.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
                     new { Column1 = dateValue , Column2 = Initials.Text},
+                    new { Column1 = " MADE INTO: ", Column2 = itemCreated }
                 };
 
             if (InitializeSubmitCheck(data))
@@ -2384,7 +2399,9 @@ namespace shred_usage_writer
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = StartTime.Value.ToShortTimeString();
                     columnNumber++;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = unit;
-                    columnNumber += 4;
+                    columnNumber++;
+                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = itemCreated;
+                    columnNumber += 3;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = Initials.Text;
                     flag = true;
                 }
