@@ -219,6 +219,11 @@ namespace shred_usage_writer
             if (!File.Exists(filePath))
             {
                 File.Copy(ogWorkbook, filePath);
+                runningPoundsTotal = 0;
+                this.Invoke((System.Windows.Forms.MethodInvoker)delegate
+                {
+                    runningPounds.Text = "Pounds Shredded: " + runningPoundsTotal.ToString();
+                });
             }
 
             if (File.Exists(filePath))
