@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>MDP Shred Usage Writer v1.0.3</AssemblyName>
-    <Version>1.0.2</Version>
+    <AssemblyName>MDP Shred Usage Writer v1.0.4</AssemblyName>
+    <Version>1.0.4</Version>
 	<ApplicationIcon>Resources\mdp_logo.ico</ApplicationIcon>
   </PropertyGroup>
 

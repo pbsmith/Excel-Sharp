@@ -80,6 +80,7 @@ namespace shred_usage_writer
 
         internal TextBox Initials;
         internal TextBox PowderLotNumber;
+        internal TextBox toteNumberBox;
 
         internal ItemNumberControl itemControl;
         internal ItemNumberControl itemControlB;
@@ -295,7 +296,7 @@ namespace shred_usage_writer
             labelVersion.Location = new System.Drawing.Point((this.ClientSize.Width / 5) * 4, 50);
             labelVersion.Font = new System.Drawing.Font("Arial", 8, FontStyle.Regular);
             labelVersion.Size = new Size(500, 60);
-            labelVersion.Text = "v1.0.2                                         PBS2025";
+            labelVersion.Text = "v1.0.4                                         PBS2025";
             labelVersion.ForeColor = System.Drawing.Color.Gray;
             this.Controls.Add(labelVersion);
 
@@ -475,19 +476,47 @@ namespace shred_usage_writer
             Date.Text = DateTime.Today.ToString("MM/dd/yyyy");
             this.Date.Validating += new CancelEventHandler(LotDate_Validating_Handler);
 
-            skidNumberLabel = new Label();
-            skidNumberLabel.Text = "Skid/Tote Number:";
-            skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            skidNumberLabel.Size = new System.Drawing.Size(350, 50);
-            ToteSkidNumber = new NumericUpDown();
-            ToteSkidNumber.Name = "Skid Number";
-            ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
-            ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
-            ToteSkidNumber.Maximum = 200;
-            ToteSkidNumber.Minimum = 0;
-            ToteSkidNumber.Value = 0;
-            ToteSkidNumber.Text = "";
-            ToteSkidNumber.Validating += ToteSkidNumber_Validating;
+            if (productNumber == "PS Purchased" || productNumber == "WM Purchased")
+            {
+                skidNumberLabel = new Label();
+                skidNumberLabel.Text = "Tote Number:";
+                skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+                skidNumberLabel.Size = new Size(300, 50);
+
+                toteNumberBox = new TextBox();
+                toteNumberBox.Name = "Tote Number";
+                toteNumberBox.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+                toteNumberBox.Size = new Size(220, 50);
+                toteNumberBox.MaxLength = 8;
+                toteNumberBox.TextAlign = HorizontalAlignment.Left;
+                toteNumberBox.KeyPress += (sender, e) =>
+                {
+                    // Only allow numeric input
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                    {
+                        e.Handled = true;
+                    }
+                };
+
+                toteNumberBox.Validating += ToteNumberBox_Validating;
+            }
+            else
+            {
+                skidNumberLabel = new Label();
+                skidNumberLabel.Text = "Skid/Tote Number:";
+                skidNumberLabel.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+                skidNumberLabel.Size = new System.Drawing.Size(350, 50);
+                ToteSkidNumber = new NumericUpDown();
+                ToteSkidNumber.Name = "Skid Number";
+                ToteSkidNumber.Font = new System.Drawing.Font("Arial", 14, FontStyle.Regular);
+                ToteSkidNumber.Size = new System.Drawing.Size(90, 50);
+                ToteSkidNumber.Maximum = 200;
+                ToteSkidNumber.Minimum = 0;
+                ToteSkidNumber.Value = 0;
+                ToteSkidNumber.Text = "";
+                ToteSkidNumber.Validating += ToteSkidNumber_Validating;
+            }
+            
 
             this.piecesNumberLabel = new Label();
             piecesNumberLabel.Text = "Number of Pieces:";
@@ -513,7 +542,7 @@ namespace shred_usage_writer
             this.BinWeight.DecimalPlaces = 2;
             this.BinWeight.Increment = 0.01M;
             this.BinWeight.Minimum = 0.00M;
-            this.BinWeight.Maximum = 1200.00M;
+            this.BinWeight.Maximum = 2500.00M;
             this.BinWeight.Value = 0.00M;
             BinWeight.Text = "";
             this.BinWeight.Size = new System.Drawing.Size(150, 50);
@@ -659,7 +688,8 @@ namespace shred_usage_writer
             tableLayout.Controls.Add(dateLabel, 0, 0);
             tableLayout.Controls.Add(Date, 1, 0);
             tableLayout.Controls.Add(skidNumberLabel, 0, 1);
-            tableLayout.Controls.Add(ToteSkidNumber, 1, 1);
+            if (productNumber == "PS Purchased" || productNumber == "WM Purchased") { tableLayout.Controls.Add(toteNumberBox, 1, 1); } else { tableLayout.Controls.Add(ToteSkidNumber, 1, 1); }
+                
             tableLayout.Controls.Add(piecesNumberLabel, 0, 2);
             tableLayout.Controls.Add(NumberPieces, 1, 2);
             tableLayout.Controls.Add(binWeightLabel, 0, 3);
@@ -1830,8 +1860,23 @@ namespace shred_usage_writer
 
         private void SubmitButton_ClickedTypeA(object sender, EventArgs e, string productNumber)
         {
-
-            var data = new[]
+            var data = new[]{
+                new { Column1 = "", Column2 = "" }
+            };
+            if (productNumber == "PS Purchased" || productNumber == "WM Purchased")
+            {
+                data = new[]
+                {
+                    new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
+                    new { Column1 = "#" + toteNumberBox.Text, Column2 = NumberPieces.Value.ToString() + " pcs" },
+                    new { Column1 = BinWeight.Value.ToString() + " lbs."  , Column2 = StartTime.Value.ToLongTimeString()  },
+                    new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
+                    new { Column1 = Initials.Text , Column2 = "" }
+                };
+            }
+            else
+            {
+                data = new[]
                 {
                     new { Column1 = productNumber, Column2 = this.Date.Value.ToShortDateString() },
                     new { Column1 = "#" + ToteSkidNumber.Value.ToString(), Column2 = NumberPieces.Value.ToString() + " pcs" },
@@ -1839,6 +1884,9 @@ namespace shred_usage_writer
                     new { Column1 = Temp.Value.ToString() + "°F" , Column2 = "NO MOLD"},
                     new { Column1 = Initials.Text , Column2 = "" }
                 };
+            }
+
+                
 
             if (InitializeSubmitCheck(data))
             {
@@ -1876,7 +1924,14 @@ namespace shred_usage_writer
             {
                 if (ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).IsEmpty())
                 {
-                    ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.ToteSkidNumber.Value;
+                    if (productNumber == "PS Purchased" || productNumber == "WM Purchased")
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.toteNumberBox.Text;
+                    }
+                    else
+                    {
+                        ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.ToteSkidNumber.Value;
+                    }
                     columnNumber += 1;
                     ws.Worksheet.Cell(ColumnNumberToName(columnNumber) + rowNumber.ToString()).Value = this.NumberPieces.Value;
                     columnNumber += 1;
@@ -1917,6 +1972,13 @@ namespace shred_usage_writer
 
             string i = "";
             if (ComboBox1.Text.ToString() == "008-000005 PS Purchased" || ComboBox1.Text.ToString() == "008-000021 WM Purchased" || ComboBox1.Text.ToString() == "002-000035 Scrap")
+            {
+                string itemText = TrimItemNumber(ComboBox1.Text.ToString());
+                i = itemText + "    Tote/Bin #: " + toteNumberBox.Text + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
+                        + "    ID: " + Initials.Text.ToString();
+
+            }
+            else if (ComboBox1.Text.ToString() == "002-000035 Scrap")
             {
                 string itemText = TrimItemNumber(ComboBox1.Text.ToString());
                 i = itemText + "    Tote/Bin #: " + ToteSkidNumber.Value.ToString() + "    Lot: " + Date.Value.ToShortDateString() + "    Time: " + StartTime.Value.ToShortTimeString()
@@ -2536,10 +2598,22 @@ namespace shred_usage_writer
                 LotDate_Validating(sender, e, ""); // Calls the main method with an empty product number
             }
         }
+        private void ToteNumberBox_Validating(object? sender, CancelEventArgs e)
+        {
+            if (this.toteNumberBox.Text == "")
+            {
+                MessageBox.Show("Please enter a valid skid/tote number. If no tote ID is present submit the number 1 for tote ID.");
+                e.Cancel = true;
+                errorProvider.SetError(toteNumberBox, "Please Enter a Valid Tote/Skid Number");
+            }
+            else
+            {
+                ClearValidationError(toteNumberBox, e);
+            }
+        }
 
         private void ToteSkidNumber_Validating(object? sender, CancelEventArgs e)
         {
-
             if (this.ToteSkidNumber.Value == 0 || this.ToteSkidNumber.Text == "")
             {
                 MessageBox.Show("Please enter a valid skid/tote number. Number cannot be 0.");
@@ -2616,11 +2690,11 @@ namespace shred_usage_writer
                 e.Cancel = true;
                 errorProvider.SetError(BinWeight, "Please Enter a Valid Weight");
             }
-            else if (BinWeight.Value >= 1200M)
+            else if (BinWeight.Value >= 2500.00M)
             {
-                MessageBox.Show("Please enter a valid weight. Weight cannot be over 1200lbs.");
+                MessageBox.Show("Please enter a valid weight. Weight cannot be over 2500lbs.");
                 e.Cancel = true;
-                errorProvider.SetError(BinWeight, "Please Enter a Valid Weight. Weight cannot be over 1200lbs.");
+                errorProvider.SetError(BinWeight, "Please Enter a Valid Weight. Weight cannot be over 2500lbs.");
             }
             else
             {

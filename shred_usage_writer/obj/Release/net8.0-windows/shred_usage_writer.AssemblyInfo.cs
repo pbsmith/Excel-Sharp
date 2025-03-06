@@ -11,13 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("MDP Shred Usage Writer v1.0.3")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("MDP Shred Usage Writer v1.0.4")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.2+9182dcd730d880f1253850ad26fe242fdc4ae490")]
-[assembly: System.Reflection.AssemblyProductAttribute("MDP Shred Usage Writer v1.0.3")]
-[assembly: System.Reflection.AssemblyTitleAttribute("MDP Shred Usage Writer v1.0.3")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.2.0")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.4.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.4+c6047f976bbaeccd13e2d432ae7bd37e66838b35")]
+[assembly: System.Reflection.AssemblyProductAttribute("MDP Shred Usage Writer v1.0.4")]
+[assembly: System.Reflection.AssemblyTitleAttribute("MDP Shred Usage Writer v1.0.4")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.4.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 
