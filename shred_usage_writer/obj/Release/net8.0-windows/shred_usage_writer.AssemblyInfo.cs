@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MDP Shred Usage Writer v1.0.5")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.5.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.5+322f984d787a603bb85743c33866272de51baa9b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.5+c3fcc86e863bbdd02f3bcba3b5e80b03f92f4272")]
 [assembly: System.Reflection.AssemblyProductAttribute("MDP Shred Usage Writer v1.0.5")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MDP Shred Usage Writer v1.0.5")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.5.0")]
