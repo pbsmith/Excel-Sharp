@@ -6,12 +6,12 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "MDP Shred Usage Writer v1.0.4/1.0.4": {
+      "MDP Shred Usage Writer v1.0.5/1.0.5": {
         "dependencies": {
           "ClosedXML": "0.102.3"
         },
         "runtime": {
-          "MDP Shred Usage Writer v1.0.4.dll": {}
+          "MDP Shred Usage Writer v1.0.5.dll": {}
         }
       },
       "ClosedXML/0.102.3": {
@@ -756,7 +756,7 @@
     }
   },
   "libraries": {
-    "MDP Shred Usage Writer v1.0.4/1.0.4": {
+    "MDP Shred Usage Writer v1.0.5/1.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

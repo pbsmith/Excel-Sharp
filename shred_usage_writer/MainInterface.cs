@@ -156,7 +156,7 @@ namespace shred_usage_writer
             // Setting up window
             this.ShowIcon = false;
             this.WindowState = FormWindowState.Maximized;
-            this.FormBorderStyle = FormBorderStyle.None;
+            this.Text = "Miceli Dairy Products Shred Writer v1.0.5";
             errorProvider = new ErrorProvider();
         }
         private string ExtractBlankExcelTemplate()

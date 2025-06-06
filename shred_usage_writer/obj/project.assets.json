@@ -4760,13 +4760,13 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "restore": {
-      "projectUniqueName": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
-      "projectName": "MDP Shred Usage Writer v1.0.4",
-      "projectPath": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
+      "projectUniqueName": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
+      "projectName": "MDP Shred Usage Writer v1.0.5",
+      "projectPath": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\shred_usage_writer.csproj",
       "packagesPath": "C:\\Users\\psmith\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\psmith\\workspace\\Excel-Sharp\\shred_usage_writer\\obj\\",
+      "outputPath": "C:\\Users\\psmith\\source\\repos\\Excel-Sharp\\shred_usage_writer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4799,7 +4799,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -4829,7 +4830,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
